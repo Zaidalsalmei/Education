@@ -6,6 +6,7 @@
 <title>EduHub — Smart Educational Resources</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
 :root {
   --primary: #7C3AED;
@@ -30,23 +31,63 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.04)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(124,58,237,.6),rgba(6,182,212,.6));border-radius:999px}
 body{
   font-family:var(--font);
-  background:var(--bg);
+  background:
+    radial-gradient(1200px 700px at 10% -10%, rgba(124,58,237,.20), transparent 60%),
+    radial-gradient(900px 500px at 90% 0%, rgba(6,182,212,.16), transparent 60%),
+    radial-gradient(1000px 600px at 50% 120%, rgba(245,158,11,.10), transparent 60%),
+    var(--bg);
   color:var(--text);
   min-height:100vh;
   overflow-x:hidden;
   line-height:1.6;
 }
 [data-lang="ar"] body,[data-lang="ar"] *{font-family:'Tajawal',var(--font)}
+/* Splash Screen */
+.splash-screen{
+  position:fixed;inset:0;z-index:100000;display:grid;place-items:center;
+  background:rgba(7,10,22,.64);
+  backdrop-filter:blur(30px) saturate(140%);
+  -webkit-backdrop-filter:blur(30px) saturate(140%);
+  opacity:1;visibility:visible;transition:opacity .7s ease, visibility .7s ease;
+}
+.splash-screen.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+.splash-panel{
+  width:min(92vw,640px);padding:28px 24px;border-radius:22px;
+  border:1px solid rgba(255,255,255,.16);
+  background:linear-gradient(140deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 18px 45px rgba(0,0,0,.35);
+  text-align:center;
+}
+.splash-logo{
+  width:96px;height:96px;margin:0 auto;border-radius:24px;display:grid;place-items:center;
+  font-weight:800;font-size:34px;color:#fff;background:linear-gradient(135deg,#4f46e5,#06b6d4);
+  border:1px solid rgba(255,255,255,.26);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14) inset,0 0 26px rgba(61,169,255,.35),0 0 46px rgba(56,189,248,.25);
+  animation:splashLogoGlow 1.5s ease-in-out forwards;
+}
+@keyframes splashLogoGlow{0%{transform:scale(.86);opacity:.2;filter:blur(2px)}45%{transform:scale(1.06);opacity:1;filter:blur(0)}100%{transform:scale(1);opacity:1}}
+.splash-message{margin-top:16px;opacity:0;transform:translateY(8px);transition:all .45s ease}
+.splash-message.show{opacity:1;transform:translateY(0)}
+.splash-hand{font-size:34px;color:#ffd166;display:inline-block;margin-bottom:8px}
+.splash-title{font-size:clamp(1.15rem,3vw,1.8rem);font-weight:700;color:#eef4ff}
+.splash-credit{margin-top:10px;color:rgba(238,244,255,.85);font-size:clamp(.84rem,2vw,1rem);line-height:1.7}
+.splash-credit.ar-credit{font-family:'Tajawal',var(--font)}
+.student-name{font-weight:800;letter-spacing:.4px;color:#dfe9ff;text-shadow:0 0 6px rgba(61,169,255,.35),0 0 12px rgba(61,169,255,.22)}
 /* Aurora Background */
 .aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.32;background-image:radial-gradient(2px 2px at 20px 30px,rgba(255,255,255,.45),transparent),radial-gradient(1px 1px at 40px 70px,rgba(255,255,255,.3),transparent),radial-gradient(1px 1px at 130px 40px,rgba(255,255,255,.35),transparent),radial-gradient(2px 2px at 230px 130px,rgba(255,255,255,.4),transparent);background-size:260px 180px;animation:starsMove 120s linear infinite}
 .aurora-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.25;animation:float 18s ease-in-out infinite}
 .aurora-blob:nth-child(1){width:600px;height:600px;background:radial-gradient(circle,#7C3AED,transparent 70%);top:-100px;left:-100px;animation-delay:0s}
 .aurora-blob:nth-child(2){width:500px;height:500px;background:radial-gradient(circle,#06B6D4,transparent 70%);top:20%;right:-100px;animation-delay:-6s}
 .aurora-blob:nth-child(3){width:400px;height:400px;background:radial-gradient(circle,#F59E0B,transparent 70%);bottom:10%;left:20%;animation-delay:-12s}
 .aurora-blob:nth-child(4){width:350px;height:350px;background:radial-gradient(circle,#EC4899,transparent 70%);bottom:-50px;right:15%;animation-delay:-4s}
 @keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-40px) scale(1.05)}66%{transform:translate(-30px,30px) scale(.95)}}
+@keyframes starsMove{from{transform:translateY(0)}to{transform:translateY(-180px)}}
 /* Layout */
 .page{position:relative;z-index:1}
 /* Navbar */
@@ -91,6 +132,12 @@ body.light .aurora-blob{opacity:.12}
 .stat-label{font-size:.8rem;color:var(--text-muted)}
 /* Filter */
 .filter-wrap{padding:1.5rem clamp(1rem,4vw,3rem);display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:center}
+.search-input{
+  min-width:220px;max-width:320px;width:100%;
+  padding:.55rem .9rem;border-radius:999px;border:1px solid var(--border);
+  background:transparent;color:var(--text);font-family:inherit;outline:none;
+}
+.search-input:focus{border-color:rgba(124,58,237,.5);background:rgba(124,58,237,.08)}
 .filter-group{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center}
 .filter-label{font-size:.75rem;color:var(--text-dim);align-self:center;margin-right:.25rem}
 .filter-btn{
@@ -116,7 +163,8 @@ body.light .aurora-blob{opacity:.12}
 }
 /* Resource Card */
 .card{
-  background:var(--glass);
+  background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+  backdrop-filter:blur(14px) saturate(130%);
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:1.25rem;
@@ -130,9 +178,16 @@ body.light .aurora-blob{opacity:.12}
   overflow:hidden;
 }
 .card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.04),transparent);pointer-events:none}
+.card::after{
+  content:'';position:absolute;top:-120%;left:-40%;width:45%;height:260%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);
+  transform:rotate(20deg);animation:glassShine 6s ease-in-out infinite;
+}
 .card:hover{background:var(--glass-hover);border-color:var(--border-hover);transform:translateY(-3px)}
+.card:hover::after{animation-duration:3.5s}
 .card.hidden{display:none}
 @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glassShine{0%,70%,100%{transform:translateX(-220%) rotate(20deg)}85%{transform:translateX(260%) rotate(20deg)}}
 .card-top{display:flex;align-items:flex-start;gap:.75rem}
 .card-icon{
   width:44px;height:44px;border-radius:12px;flex-shrink:0;
@@ -163,11 +218,113 @@ body.light .aurora-blob{opacity:.12}
 }
 .card-link-btn:hover{background:var(--glass-hover);color:var(--text);border-color:var(--border-hover)}
 .no-results{grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-dim);font-size:1rem}
+/* Roadmap */
+.roadmap-wrap{padding:1rem clamp(1rem,4vw,3rem) 2rem}
+.roadmap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+.phase-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;transition:.25s}
+.phase-card:hover{background:var(--glass-hover);border-color:var(--border-hover)}
+.phase-title{font-weight:700;font-size:.95rem;margin-bottom:.4rem}
+.phase-sub{font-size:.78rem;color:var(--text-muted);margin-bottom:.7rem}
+.phase-list{padding-inline-start:1rem;color:var(--text-muted);font-size:.8rem}
+.phase-list li{margin-bottom:.25rem}
+/* Timeline modal */
+.modal{position:fixed;inset:0;background:rgba(7,6,16,.68);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:300;padding:1rem}
+.modal.open{display:flex}
+.modal-card{width:min(920px,100%);max-height:88vh;overflow:auto;background:linear-gradient(130deg,rgba(255,255,255,.14),rgba(255,255,255,.05));backdrop-filter:blur(18px) saturate(140%);border:1px solid var(--border);border-radius:16px;padding:1.25rem}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.modal-title{font-size:1.1rem;font-weight:700}
+.close-btn{border:1px solid var(--border);background:transparent;color:var(--text-muted);border-radius:8px;padding:.3rem .65rem;cursor:pointer}
+.timeline{position:relative;padding-left:1.35rem}
+[dir="rtl"] .timeline{padding-left:0;padding-right:1.35rem}
+.timeline::before{content:'';position:absolute;left:.38rem;top:.2rem;bottom:.2rem;width:2px;background:var(--border)}
+[dir="rtl"] .timeline::before{left:auto;right:.38rem}
+.timeline-item{position:relative;margin-bottom:1rem;background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:.8rem}
+.timeline-item::before{content:'';position:absolute;left:-1.1rem;top:.95rem;width:10px;height:10px;border-radius:50%;background:var(--primary-light)}
+[dir="rtl"] .timeline-item::before{left:auto;right:-1.1rem}
+.ti-title{font-size:.88rem;font-weight:600;margin-bottom:.3rem}
+.ti-text{font-size:.8rem;color:var(--text-muted)}
+/* Master Tracks */
+.master{padding:1rem clamp(1rem,4vw,3rem) 2rem}
+.master-panel{background:linear-gradient(140deg,rgba(255,255,255,.13),rgba(255,255,255,.05));backdrop-filter:blur(18px) saturate(130%);border:1px solid var(--border);border-radius:18px;padding:1rem}
+.master-top{display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;margin-bottom:.9rem}
+.search-wrap{position:relative;flex:1;min-width:220px}
+.master-search{flex:1;min-width:220px;padding:.65rem .95rem;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);font-family:inherit}
+.suggestions{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;display:none;z-index:50;max-height:220px;overflow:auto}
+.suggestions.show{display:block}
+.suggestion-item{padding:.5rem .7rem;font-size:.8rem;color:var(--text-muted);cursor:pointer}
+.suggestion-item:hover{background:var(--glass-hover);color:var(--text)}
+.master-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.9rem}
+.master-tab{padding:.45rem .8rem;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer}
+.master-tab.active{background:rgba(124,58,237,.2);color:var(--primary-light);border-color:rgba(124,58,237,.4)}
+.roadmap-big{display:grid;grid-template-columns:1.2fr 2fr;gap:1rem}
+.journey{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:14px;padding:1rem}
+.journey h3{font-size:.95rem;margin-bottom:.6rem}
+.journey-step{padding:.65rem;border:1px dashed var(--border);border-radius:10px;margin-bottom:.55rem;font-size:.83rem;color:var(--text-muted)}
+.course-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.8rem}
+.course-item{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:.8rem}
+.course-item h4{font-size:.88rem;margin-bottom:.35rem}
+.course-meta{font-size:.75rem;color:var(--text-muted);display:flex;gap:.35rem;flex-wrap:wrap}
+.course-social{display:flex;gap:.35rem;align-items:center;margin-top:.5rem;flex-wrap:wrap}
+.social-icon{
+  width:28px;height:28px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;
+  text-decoration:none;color:var(--text-muted);font-size:.82rem;
+  background:linear-gradient(145deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow: inset 1px 1px 3px rgba(255,255,255,.14), inset -2px -2px 5px rgba(0,0,0,.24), 0 2px 6px rgba(0,0,0,.16);
+  backdrop-filter: blur(8px) saturate(140%);
+  transition:.2s ease;
+}
+.social-icon:hover{transform:translateY(-2px);color:var(--text);box-shadow: inset 1px 1px 4px rgba(255,255,255,.2), inset -3px -3px 6px rgba(0,0,0,.28), 0 5px 12px rgba(0,0,0,.2)}
+.badge-ar{background:rgba(16,185,129,.14);border-color:rgba(16,185,129,.35);color:#6EE7B7}
+.badge-tr{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.35);color:#FCA5A5}
+.badge-en{background:rgba(59,130,246,.14);border-color:rgba(59,130,246,.35);color:#93C5FD}
+.deploy-tools{margin-top:.85rem;display:flex;gap:.5rem;flex-wrap:wrap}
+/* Master vertical paths */
+.path-wrap{padding:1rem clamp(1rem,4vw,3rem) 2rem}
+.path-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem}
+.path-card{background:linear-gradient(140deg,rgba(255,255,255,.13),rgba(255,255,255,.05));border:1px solid var(--border);border-radius:14px;padding:1rem}
+.path-title{font-size:.94rem;font-weight:700;margin-bottom:.5rem}
+.v-timeline{position:relative;padding-left:1.2rem}
+.v-timeline::before{content:'';position:absolute;left:.32rem;top:.2rem;bottom:.2rem;width:2px;background:var(--border)}
+.v-step{position:relative;margin:.5rem 0;padding:.45rem .55rem .45rem .7rem;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.04);font-size:.8rem}
+.v-step::before{content:'';position:absolute;left:-.96rem;top:.72rem;width:9px;height:9px;border-radius:999px;background:#64748b}
+.v-step.done::before{background:#22c55e}
+.v-step-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.v-check{cursor:pointer}
+/* Skeleton */
+.skeleton{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.8rem}
+.sk{height:110px;border-radius:12px;background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.10),rgba(255,255,255,.04));background-size:240% 100%;animation:sk 1.2s linear infinite}
+@keyframes sk{from{background-position:100% 0}to{background-position:-100% 0}}
+/* Print */
+@media print{
+  nav,.aurora,.stars,.contribute,.ideas,.hub,.toast,.compare-drawer{display:none!important}
+  body{background:#fff;color:#000}
+  .page{padding:0}
+  .path-card,.course-item,.phase-card,.master-panel{break-inside:avoid;border:1px solid #ccc;background:#fff}
+}
+.badge-cert{padding:.1rem .45rem;border-radius:999px;border:1px solid rgba(16,185,129,.35);background:rgba(16,185,129,.12);color:#6EE7B7}
+.badge-no{padding:.1rem .45rem;border-radius:999px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.09);color:#FCA5A5}
+.tiny-btn{padding:.2rem .5rem;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:.72rem;cursor:pointer}
+.tiny-btn:hover{background:var(--glass-hover);color:var(--text)}
+@media(max-width:980px){.roadmap-big{grid-template-columns:1fr}}
+/* Compare drawer */
+.compare-drawer{position:fixed;left:1rem;right:1rem;bottom:1rem;z-index:250;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:.75rem;display:none}
+.compare-drawer.show{display:block}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:.6rem;align-items:center}
+.compare-col{padding:.5rem;border:1px solid var(--border);border-radius:10px;min-height:58px;font-size:.8rem;color:var(--text-muted)}
+.compare-actions{display:flex;gap:.45rem}
+/* UI ideas */
+.ideas{padding:1rem clamp(1rem,4vw,3rem) 2rem}
+.ideas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.8rem}
+.idea-card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:.75rem .85rem}
+.idea-card b{color:var(--primary-light)}
 /* Software Hub */
 .hub{padding:2rem clamp(1rem,4vw,3rem)}
 .hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
 .hub-card{
-  background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);
+  background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+  backdrop-filter:blur(12px) saturate(125%);
+  border:1px solid var(--border);border-radius:var(--radius);
   padding:1.25rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;
   text-align:center;transition:.25s;
 }
@@ -238,7 +395,20 @@ footer{
 </head>
 <body>
 
+<!-- Splash Screen -->
+<div id="splash-screen" class="splash-screen" aria-hidden="true">
+  <div class="splash-panel">
+    <div id="splash-logo" class="splash-logo">MP</div>
+    <div id="splash-message" class="splash-message">
+      <i class="fa-solid fa-hand fa-beat-fade splash-hand" aria-hidden="true"></i>
+      <div class="splash-title">MasterPath'a Hos Geldiniz</div>
+      <p class="splash-credit">Bu proje, ogrenci <span class="student-name">ZAID ALSALEMI</span> tarafindan sunulmustur.</p>
+    </div>
+  </div>
+</div>
+
 <!-- Aurora Background -->
+<div class="stars" aria-hidden="true"></div>
 <div class="aurora" aria-hidden="true">
   <div class="aurora-blob"></div>
   <div class="aurora-blob"></div>
@@ -279,6 +449,7 @@ footer{
 
 <!-- Filters -->
 <div class="filter-wrap">
+  <input id="search-input" class="search-input" type="text" placeholder="Search courses..." oninput="setSearch(this.value)">
   <div class="filter-group">
     <span class="filter-label" data-i18n="filter-cat">Category:</span>
     <button class="filter-btn cat-btn active" data-cat="all" onclick="setCat('all')">✦ <span data-i18n="cat-all">All</span></button>
@@ -293,6 +464,19 @@ footer{
     <button class="filter-btn type-btn" data-type="website" onclick="setType('website')" data-i18n="type-website">Website</button>
     <button class="filter-btn type-btn" data-type="software" onclick="setType('software')" data-i18n="type-software">Software</button>
   </div>
+  <div class="filter-group">
+    <span class="filter-label" data-i18n="filter-price">Price:</span>
+    <button class="filter-btn price-btn active" data-price="all" onclick="setPrice('all')" data-i18n="price-all">All</button>
+    <button class="filter-btn price-btn" data-price="free" onclick="setPrice('free')" data-i18n="price-free">Free</button>
+    <button class="filter-btn price-btn" data-price="paid" onclick="setPrice('paid')" data-i18n="price-paid">Paid</button>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label" data-i18n="filter-level">Level:</span>
+    <button class="filter-btn level-btn active" data-level="all" onclick="setLevel('all')" data-i18n="level-all">All</button>
+    <button class="filter-btn level-btn" data-level="beginner" onclick="setLevel('beginner')" data-i18n="level-beginner">Beginner</button>
+    <button class="filter-btn level-btn" data-level="intermediate" onclick="setLevel('intermediate')" data-i18n="level-intermediate">Intermediate</button>
+    <button class="filter-btn level-btn" data-level="advanced" onclick="setLevel('advanced')" data-i18n="level-advanced">Advanced</button>
+  </div>
 </div>
 
 <!-- Cards -->
@@ -303,6 +487,84 @@ footer{
     <span id="count-badge" style="font-size:.8rem;color:var(--text-dim)"></span>
   </div>
   <div class="cards-grid" id="cards-container"></div>
+</div>
+
+<!-- Project Roadmap -->
+<div class="roadmap-wrap">
+  <div class="section-header">
+    <span class="section-title" data-i18n="roadmap-title">Golden Roadmap</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="roadmap-grid">
+    <div class="phase-card">
+      <div class="phase-title" data-i18n="phase-learn-title">1) Learning Phase</div>
+      <div class="phase-sub" data-i18n="phase-learn-sub">Courses and sources for each track (20+).</div>
+      <ul class="phase-list">
+        <li data-i18n="phase-learn-li1">Core concepts and prerequisites.</li>
+        <li data-i18n="phase-learn-li2">Course rating, duration, and language.</li>
+      </ul>
+    </div>
+    <div class="phase-card">
+      <div class="phase-title" data-i18n="phase-dev-title">2) Development Phase</div>
+      <div class="phase-sub" data-i18n="phase-dev-sub">Tools, IDEs, and practical projects.</div>
+      <ul class="phase-list">
+        <li data-i18n="phase-dev-li1">Setup VS Code, Git, Node/Python.</li>
+        <li data-i18n="phase-dev-li2">Build guided mini-projects.</li>
+      </ul>
+    </div>
+    <div class="phase-card">
+      <div class="phase-title" data-i18n="phase-deploy-title">3) Deployment Phase</div>
+      <div class="phase-sub" data-i18n="phase-deploy-sub">Publish projects with clear platform rules.</div>
+      <ul class="phase-list">
+        <li data-i18n="phase-deploy-li1">GitHub Pages for static websites.</li>
+        <li data-i18n="phase-deploy-li2">Vercel/Netlify for React/Next.js.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Master Tracks -->
+<div class="master">
+  <div class="section-header">
+    <span class="section-title" data-i18n="master-title">Master Roadmaps</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="master-panel">
+    <div class="master-top">
+      <div class="search-wrap">
+        <input id="master-search" class="master-search" type="text" placeholder="ابحث باسم الكورس أو المحاضر..." oninput="handleMasterSearch(this.value)">
+        <div id="master-suggestions" class="suggestions"></div>
+      </div>
+      <span id="master-count" style="font-size:.8rem;color:var(--text-dim)"></span>
+    </div>
+    <div id="master-tabs" class="master-tabs"></div>
+    <div class="roadmap-big">
+      <div class="journey">
+        <h3 id="journey-title">المراحل</h3>
+        <div id="journey-steps"></div>
+      </div>
+      <div class="course-list" id="master-course-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 50 UI Ideas -->
+<div class="ideas">
+  <div class="section-header">
+    <span class="section-title" data-i18n="ideas-title">50 UI/UX Upgrade Ideas</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="ideas-grid" id="ui-ideas-list"></div>
+</div>
+
+<!-- Master Vertical Paths -->
+<div class="path-wrap">
+  <div class="section-header">
+    <span class="section-title">Master Career Paths</span>
+    <div class="section-line"></div>
+  </div>
+  <p style="color:var(--text-muted);margin-bottom:.7rem;font-size:.85rem">هذا المسار يوفر لك 70% من وقت البحث العشوائي، ويضعك على الطريق الصحيح للتوظيف في كبرى شركات التقنية في تركيا والعالم.</p>
+  <div class="path-grid" id="paths-grid"></div>
 </div>
 
 <!-- Software Hub -->
@@ -366,11 +628,35 @@ footer{
 
 <footer>
   <p>EduHub &copy; 2025 &nbsp;·&nbsp; <span data-i18n="footer">Built for learners everywhere</span></p>
+  <p style="margin-top:.5rem;font-size:.75rem;color:var(--text-dim)">Contributors: Student Community · Curated by EduHub Builders</p>
 </footer>
 
 </div><!-- end .page -->
 
 <div class="toast" id="toast"></div>
+<div class="modal" id="timeline-modal" onclick="closeTimeline(event)">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div class="modal-title" id="timeline-title"></div>
+      <div style="display:flex;gap:.35rem;align-items:center">
+        <button class="tiny-btn" onclick="zoomTimeline(-1)">A-</button>
+        <button class="tiny-btn" onclick="zoomTimeline(1)">A+</button>
+        <button class="close-btn" onclick="closeTimeline(event)">✕</button>
+      </div>
+    </div>
+    <div class="timeline" id="timeline-content"></div>
+  </div>
+</div>
+<div class="compare-drawer" id="compare-drawer">
+  <div class="compare-grid">
+    <div class="compare-col" id="compare-a" data-i18n="compare-a">اختر كورس للمقارنة</div>
+    <div class="compare-col" id="compare-b" data-i18n="compare-b">اختر كورس ثاني</div>
+    <div class="compare-actions">
+      <button class="tiny-btn" onclick="runCompare()" data-i18n="compare-run">قارن</button>
+      <button class="tiny-btn" onclick="clearCompare()" data-i18n="compare-clear">مسح</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ═══════════════════════════════════════
@@ -381,7 +667,7 @@ const RESOURCES = [
   {id:'r1',cat:'prog',type:'video',lang:'ar',icon:'🎓',
    title:{ar:'أبو هدهود - برمجة بالعربي',tr:'Abu Hodhod - Arapça Programlama',en:'Programming Advice - Abu Hodhod'},
    desc:{ar:'أفضل قناة عربية لتعلم البرمجة من الصفر',tr:'Sıfırdan programlama öğrenmek için en iyi Arapça kanal',en:'Best Arabic YouTube channel for learning programming from scratch'},
-   url:'https://www.youtube.com/@ProgrammingAdvice'},
+   url:'https://www.youtube.com/@ProgrammingAdvices'},
   {id:'r2',cat:'prog',type:'video',lang:'ar',icon:'💻',
    title:{ar:'Elzero Web School',tr:'Elzero Web School',en:'Elzero Web School'},
    desc:{ar:'كورسات HTML/CSS/JS/PHP باللغة العربية مجاناً',tr:'Arapça HTML/CSS/JS/PHP kursları ücretsiz',en:'Free Arabic HTML/CSS/JS/PHP courses'},
@@ -393,7 +679,7 @@ const RESOURCES = [
   {id:'r4',cat:'prog',type:'video',lang:'tr',icon:'📹',
    title:{ar:'Sadık Turan - تركي',tr:'Sadık Turan',en:'Sadık Turan'},
    desc:{ar:'مطور ومدرس تركي شهير بشروحاته الواضحة',tr:'Anlaşılır anlatımıyla tanınan Türk yazılımcı ve eğitmen',en:'Popular Turkish developer and educator with clear tutorials'},
-   url:'https://www.youtube.com/@SadikTuran'},
+   url:''},
   {id:'r5',cat:'prog',type:'website',lang:'en',icon:'🆓',
    title:{ar:'FreeCodeCamp',tr:'FreeCodeCamp',en:'FreeCodeCamp'},
    desc:{ar:'منصة مجانية لتعلم تطوير الويب باللغة الإنجليزية',tr:'Web geliştirmeyi ücretsiz öğrenmek için İngilizce platform',en:'Free platform for learning web development with certifications'},
@@ -441,7 +727,7 @@ const RESOURCES = [
   {id:'r15',cat:'ai',type:'website',lang:'all',icon:'🤖',
    title:{ar:'ChatGPT',tr:'ChatGPT',en:'ChatGPT'},
    desc:{ar:'مساعد الذكاء الاصطناعي الأكثر شهرة من OpenAI',tr:'OpenAI\'den en popüler yapay zeka asistanı',en:'OpenAI\'s flagship AI assistant for text, code, and analysis'},
-   url:'https://chat.openai.com'},
+   url:'https://chatgpt.com'},
   {id:'r16',cat:'ai',type:'website',lang:'all',icon:'✦',
    title:{ar:'Claude - Anthropic',tr:'Claude - Anthropic',en:'Claude by Anthropic'},
    desc:{ar:'مساعد ذكاء اصطناعي متقدم من Anthropic للتحليل والكتابة',tr:'Analiz ve yazmak için Anthropic\'ten gelişmiş yapay zeka',en:'Advanced AI assistant for writing, coding, and research'},
@@ -473,6 +759,125 @@ const SOFTWARE = [
   {icon:'🧠',name:'Obsidian',desc:{ar:'أداة قوية لتنظيم الملاحظات',tr:'Güçlü not yönetim aracı',en:'Powerful knowledge management app'},url:'https://obsidian.md'},
 ];
 
+const COURSE_DETAILS = {
+  r1:{price:'free',level:'beginner',duration:'32h',rating:4.8,enrollments:5200,visitors:9100,prerequisites:['Basic English terms'],syllabus:['Algorithms basics','Problem solving','Programming mindset'],projects:['Simple calculator','Todo list app'],certificate:true,deployment:['GitHub Pages (HTML/CSS/JS)','Vercel (React)']},
+  r2:{price:'free',level:'beginner',duration:'45h',rating:4.9,enrollments:8400,visitors:12000,prerequisites:['Computer basics'],syllabus:['HTML/CSS','JavaScript','PHP/MySQL'],projects:['Landing page','CRUD app'],certificate:true,deployment:['GitHub Pages','Hostinger for PHP/MySQL']},
+  r4:{price:'paid',level:'intermediate',duration:'28h',rating:4.6,enrollments:2100,visitors:5200,prerequisites:['HTML/CSS/JS'],syllabus:['Web fundamentals','Node.js','Project architecture'],projects:['Portfolio site','API app'],certificate:true,deployment:['Netlify','Vercel']},
+  r5:{price:'free',level:'beginner',duration:'300h',rating:4.8,enrollments:10000,visitors:15000,prerequisites:['Basic computer skills'],syllabus:['Responsive web','JS algorithms','Frontend libraries'],projects:['Survey form','React app'],certificate:true,deployment:['GitHub Pages','Vercel']},
+  r9:{price:'free',level:'beginner',duration:'20h',rating:4.7,enrollments:3300,visitors:6200,prerequisites:['Arabic literacy'],syllabus:['Grammar','Daily conversation','Listening'],projects:['Self-intro video','Weekly speaking log'],certificate:false,deployment:['Practice on Tandem','Practice on Cambly']},
+  r12:{price:'free',level:'intermediate',duration:'18h',rating:4.8,enrollments:2800,visitors:4700,prerequisites:['A2 level'],syllabus:['Vocabulary','Business English','Pronunciation'],projects:['Shadowing audio practice','Email writing drills'],certificate:false,deployment:['Live speaking rooms','Language exchange']}
+};
+
+const HUB_CATALOG = [
+  {id:'programming',name:'مجمع البرمجة وعلوم الحاسوب',phases:['التأسيس والمنطق','اختيار التخصص والتطوير','الرفع والنشر على GitHub/Vercel'],courses:[
+    ['أساسيات البرمجة و C++','أبو هدهود (Programming Advice)','عربي','مدفوع','نعم'],['كورس الويب المتكامل (Zero2Hero)','Elzero Web School','عربي','مجاني','نعم'],['علوم الحاسوب CS50','جامعة هارفارد (Harvard)','إنجليزي','مجاني','نعم'],['Python Bootcamp','Sadık Turan','تركي','مدفوع','نعم'],['C# و SQL للمبتدئين','Murat Yücedağ','تركي','مجاني','نعم'],['تطوير تطبيقات الأندرويد','Atıl Samancıoğlu','تركي','مدفوع','نعم'],['Full Stack Web Dev','FreeCodeCamp','إنجليزي','مجاني','نعم'],['JavaScript Mastery','Adrian Twarog','إنجليزي','مجاني','نعم'],['تخصص خوارزميات البيانات','Dr. Mostafa Saad','عربي','مجاني','نعم'],['Flutter & Dart','عبدالله منصور','عربي','مجاني','نعم'],['Java Programlama','BTK Akademi','تركي','مجاني','نعم'],['Node.js & Express','Programming with Mosh','إنجليزي','مدفوع','نعم'],['React Framework','Traversy Media','إنجليزي','مجاني','نعم'],['أساسيات الأمن السيبراني','ياسر العصيفير','عربي','مجاني','نعم'],['Ethical Hacking (CEH)','منصة سطر (Satr)','عربي','مدفوع','نعم'],['Swift (iOS Development)','Angela Yu','إنجليزي','مدفوع','نعم'],['Unity Game Development','Brackeys','إنجليزي','مجاني','نعم'],['PHP & Laravel','UniqueCoderz Academy','عربي','مجاني','نعم'],['ASP.NET Core','محمد عيسى','عربي','مجاني','نعم'],['DevOps Engineering','Nana (TechWorld)','إنجليزي','مجاني','نعم']
+  ]},
+  {id:'languages',name:'مجمع اللغات والترجمة',phases:['القواعد والتأسيس','الاستماع والمحادثة','التحضير للاختبارات العالمية TOEFL/IELTS/TÖMER'],courses:[
+    ['تعلم الإنجليزية من الصفر','ZAmericanEnglish','عربي','مجاني','لا'],['طليق (Taleek)','إبراهيم عادل','عربي','مجاني','لا'],['Sıfırdan İngilizce','Haluk Tatar','تركي','مجاني','لا'],['English with Lucy','Lucy Bella','إنجليزي','مجاني','لا'],['BBC Learning English','هيئة الإذاعة البريطانية','إنجليزي','مجاني','لا'],['تعلم التركية (A1-C1)','يونس إمره (YEE)','تركي','مجاني','نعم'],['قواعد اللغة التركية بالعربي','قناة قصة تركيا','عربي','مجاني','لا'],['محادثة إنجليزية يومية','Learn English with TV','إنجليزي','مجاني','لا'],['تحضير آيلتس (IELTS)','IELTS Liz','إنجليزي','مجاني','لا'],['قواميس أكسفورد التفاعلية','Oxford University','إنجليزي','مجاني','لا'],['English for Business','Coursera','إنجليزي','مدفوع','نعم'],['ممارسة اللغة مع أجانب','Tandem','عالمي','مجاني','لا'],['تعلم التركية للسياح','مدرسة 101 التركية','إنجليزي','مجاني','لا'],['فن الترجمة الفورية','أكاديمية الترجمة','عربي','مدفوع','نعم'],['English Grammar in Use','Raymond Murphy','إنجليزي','كتاب/كورس','لا'],['Pronunciation Workshop','Paul Gruber','إنجليزي','مدفوع','نعم'],['تعلم الإنجليزية للأطفال','British Council Kids','إنجليزي','مجاني','لا'],['دروس الاستماع المتقدمة','VOA Learning English','إنجليزي','مجاني','لا'],['كورس اللغة الألمانية','Deutsch Welle','ألماني','مجاني','لا'],['اللغة الفرنسية للمبتدئين','Learn French','فرنسي','مجاني','لا']
+  ]},
+  {id:'design',name:'مجمع التصميم والوسائط',phases:['تعلم الأدوات PS/AI','قواعد التصميم والـ UI/UX','بناء البورتفوليو على Behance'],courses:[
+    ['دبلومة الجرافيك الشاملة','Nour Design','عربي','مجاني','لا'],['تعليم فوتوشوب للمبتدئين','مصطفى مكرم','عربي','مجاني','لا'],['Photoshop Mastery','Onur Naci Öztürkler','تركي','مجاني','لا'],['UI/UX Design','Google (Coursera)','إنجليزي','مدفوع','نعم'],['تعلم الإليستريتور','Satori Graphics','إنجليزي','مجاني','لا'],['صناعة الشعارات (Logos)','إياد','عربي','مجاني','لا'],['Motion Graphics','Mostafa Makram','عربي','مجاني','لا'],['Premiere Pro Video Editing','فنون المونتاج','عربي','مجاني','لا'],['After Effects Visual Effects','Video Copilot','إنجليزي','مجاني','لا'],['Blender 3D Design','Blender Guru','إنجليزي','مجاني','لا'],['Figma for UI Design','Flux Academy','إنجليزي','مجاني','لا'],['التصميم المعماري (AutoCAD)','أكاديمية طريق','عربي','مدفوع','نعم'],['تجربة المستخدم (User Research)','Interaction Design','إنجليزي','مدفوع','نعم'],['الرسم الرقمي (Digital Art)','مدرسة Proko','إنجليزي','مجاني','لا'],['تصميم واجهات الجوال','Adem İlter','تركي','مجاني','لا'],['Canva for Business','Canva Design School','إنجليزي','مجاني','نعم'],['الإخراج الفني (Art Direction)','The Futur','إنجليزي','مجاني','لا'],['مونتاج الفيديو (DaVinci Resolve)','قنوات تعليمية','تركي','مجاني','لا'],['تيبوجرافي (Typography)','خطاطون عرب','عربي','مجاني','لا'],['التصوير الفوتوغرافي','Peter McKinnon','إنجليزي','مجاني','لا']
+  ]},
+  {id:'ai',name:'مجمع الذكاء الاصطناعي',phases:['فهم الـ Prompt Engineering','استخدام الأدوات المساعدة','برمجة نماذج AI خاصة'],courses:[
+    ['AI for Everyone','Andrew Ng','إنجليزي','مجاني','نعم'],['هندسة الأوامر (Prompts)','هشام بكر','عربي','مجاني','لا'],['ChatGPT Masterclass','Udemy','إنجليزي','مدفوع','نعم'],['أدوات الذكاء الاصطناعي','Barış Özcan','تركي','مجاني','لا'],['Midjourney Art Mastery','قنوات تعليمية','إنجليزي','مجاني','لا'],['تعلم الـ Machine Learning','هشام عاصم','عربي','مجاني','لا'],['Data Science with Python','منصة سطر','عربي','مجاني','نعم'],['AI in Marketing','HubSpot Academy','إنجليزي','مجاني','نعم'],['Deep Learning Specialization','DeepLearning.ai','إنجليزي','مدفوع','نعم'],['أدوات الإنتاجية (Notion AI)','قنوات تقنية','عربي','مجاني','لا'],['Generative AI for Devs','Google Cloud','إنجليزي','مجاني','نعم'],['الـ AI في التصميم','Gamma & Canva','عالمي','مجاني','لا'],['إنشاء بوتات تليجرام بالـ AI','قنوات برمجية','تركي','مجاني','لا'],['أخلاقيات الذكاء الاصطناعي','جامعة لندن','إنجليزي','مجاني','نعم'],['AI Video Generation','Runway Academy','إنجليزي','مجاني','لا'],['معالجة اللغات الطبيعية NLP','مدرسة المبرمجين','عربي','مجاني','لا'],['تخصص Data Analytics','IBM','إنجليزي','مدفوع','نعم'],['الـ AI في الطب والعلوم','أكاديميات متخصصة','إنجليزي','مدفوع','لا'],['تعلم SQL للبيانات','Codezilla','عربي','مجاني','لا'],['بناء تطبيقات LLM','LangChain Tutorial','إنجليزي','مجاني','لا']
+  ]},
+  {id:'business',name:'مجمع التسويق والإدارة',phases:['أساسيات السوق','استراتيجيات النمو والبيع','إدارة المشاريع والأتمتة'],courses:[
+    ['أساسيات التسويق الرقمي','Google','عربي','مجاني','نعم'],['التجارة الإلكترونية','إيهاب مسلم','عربي','مجاني','لا'],['الإدارة والقيادة','ثابت حجازي','عربي','مجاني','لا'],['Dijital Pazarlama Eğitimi','BTK Akademi','تركي','مجاني','نعم'],['تحسين محركات البحث SEO','قنوات متخصصة','عربي','مجاني','لا'],['Social Media Marketing','HubSpot','إنجليزي','مجاني','نعم'],['Content Marketing','Neil Patel','إنجليزي','مجاني','لا'],['إدارة المشاريع (PMP)','أكاديميات دولية','عربي','مدفوع','نعم'],['ريادة الأعمال للمبتدئين','جامعة ستانفورد','إنجليزي','مجاني','لا'],['التسويق عبر البريد','Mailchimp Academy','إنجليزي','مجاني','نعم'],['تحليل الأسواق المالية','قنوات اقتصادية','تركي','مجاني','لا'],['فن الإقناع والمبيعات','قنوات كرتون تعليمي','عربي','مجاني','لا'],['Google Analytics 4','Google Skillshop','إنجليزي','مجاني','نعم'],['إدارة الوقت والإنتاجية','علي محمد علي','عربي','مجاني','لا'],['العمل الحر (Freelancing)','أكاديمية حسوب','عربي','مجاني','لا'],['Dropshipping Mastery','قنوات أجنبية','إنجليزي','مجاني','لا'],['استراتيجيات البراندينج','Branding School','إنجليزي','مدفوع','نعم'],['E-Ticaret Kurulumu','قنوات تركية','تركي','مجاني','لا'],['المحاسبة لغير المحاسبين','إيهاب مسلم','عربي','مجاني','لا'],['استثمار الأموال والادخار','قنوات مالية','عربي','مجاني','لا']
+  ]}
+];
+
+const UI_IMPROVEMENTS = [
+  'Hero with animated gradient headline','Sticky quick-actions bar','Smart search suggestions dropdown','Voice search for course names','Filter chips with remove-all action','Pinned recent filters','Saved filter presets per user','Course card density switch','Compact/list/grid layout toggle','Keyboard shortcuts overlay',
+  'Skeleton loading for cards','Infinite scroll with section anchors','Back to top floating button','Progress ring per learning path','Weekly streak visual meter','Daily learning target widget','Estimated finish date badge','Smart empty state suggestions','Contextual tooltips for terms','Onboarding walkthrough overlay',
+  'Micro-interactions on hover','Parallax galaxy depth effect','Breathing glow around active cards','Magnetic buttons on pointer move','Soft haptic click sound toggle','Adaptive contrast mode','High readability mode','Dynamic font scaling slider','RTL-optimized spacing refinement','Color-blind safe palette mode',
+  'Course compare drawer','Bookmark folders and tags','Recently viewed timeline','Auto-generate study plan button','Export path as PDF','Share roadmap snapshot image','Print-friendly roadmap mode','Quick notes per course','Personal rating per course','Local achievements badges',
+  'Timeline zoom levels','Timeline milestone checkpoints','Prerequisite dependency graph','Certificate verification links','Platform deployment checklist','One-click copy deployment commands','Mobile bottom action bar','Offline PWA install prompt','Live stats mini dashboard','Feedback widget with sentiment tags'
+];
+
+const MASTER_PATHS = [
+  {id:'software-engineer',title:'مسار هندسة البرمجيات (The Software Engineer Path)',steps:['محو الأمية الرقمية: فهم Hardware vs Software + مفاهيم OS + Binary & Logic','لغة التأسيس C++: Memory management + OOP + Arrays','هندسة البيانات: Stacks/Queues/Trees + Problem Solving','التخصص والرفع: Web/App/Backend + Git/GitHub + Vercel/AWS']},
+  {id:'linguistic-fluency',title:'مسار إتقان اللغات (The Linguistic Fluency Path)',steps:['التقييم والتأسيس: Placement Test + أول 500 كلمة','المدخلات السمعية: Immersion عبر بودكاست/أخبار + قواعد بالسياق','المخرجات والممارسة: محادثة + كتابة أكاديمية/مهنية','الاعتماد الدولي: IELTS/TOEFL/TOMER']},
+  {id:'ai-strategist',title:'مسار الذكاء الاصطناعي (The AI Strategist Path)',steps:['فهم AI: Generative AI + LLM + الأخلاقيات والخصوصية','Prompt Engineering: Zero-shot / Few-shot','AI Automation: ChatGPT/Notion/Gamma + إنشاء وسائط','Custom AI: بناء بوت أو GPT خاص للمشروع']},
+  {id:'visual-creator',title:'مسار التصميم الرقمي (The Visual Creator Path)',steps:['مبادئ التصميم: الألوان والخطوط وUX قبل UI','Tool Mastery: Photoshop + Illustrator + Figma','Branding: بناء هوية بصرية بمشاريع عملية','Portfolio: Behance/Dribbble + تسعير خدماتك']},
+  {id:'growth-architect',title:'مسار التسويق والإدارة (The Growth Architect Path)',steps:['أساسيات السوق: SWOT + رحلة العميل','Digital Strategy: SEO + إعلانات مدفوعة','Analytics: Google Analytics + CRO','Launch & Scale: إطلاق المنتج + أتمتة المبيعات']}
+];
+
+const COURSE_URLS = {
+  'أساسيات البرمجة و C++':'https://www.youtube.com/@ProgrammingAdvice',
+  'كورس الويب المتكامل (Zero2Hero)':'https://elzero.org',
+  'علوم الحاسوب CS50':'https://cs50.harvard.edu',
+  'Python Bootcamp':'https://www.youtube.com/@SadikTuran',
+  'C# و SQL للمبتدئين':'https://www.youtube.com/@MuratYucedag',
+  'تطوير تطبيقات الأندرويد':'https://www.udemy.com/user/atil-samancioglu/',
+  'Full Stack Web Dev':'https://www.freecodecamp.org',
+  'JavaScript Mastery':'https://www.youtube.com/@AdrianTwarog',
+  'تخصص خوارزميات البيانات':'https://www.youtube.com/@ArabicCompetitiveProgramming',
+  'Flutter & Dart':'https://www.youtube.com/results?search_query=عبدالله+منصور+flutter',
+  'Java Programlama':'https://www.btkakademi.gov.tr',
+  'Node.js & Express':'https://programmingwithmosh.com',
+  'React Framework':'https://www.youtube.com/@TraversyMedia',
+  'أساسيات الأمن السيبراني':'https://www.youtube.com/results?search_query=ياسر+العصيفير+امن+سيبراني',
+  'Ethical Hacking (CEH)':'https://satr.codes',
+  'Swift (iOS Development)':'https://www.udemy.com/course/ios-13-app-development-bootcamp/',
+  'Unity Game Development':'https://www.youtube.com/@Brackeys',
+  'PHP & Laravel':'https://www.youtube.com/results?search_query=UniqueCoderz+Laravel',
+  'ASP.NET Core':'https://www.youtube.com/results?search_query=محمد+عيسى+ASP.NET+Core',
+  'DevOps Engineering':'https://www.youtube.com/@TechWorldwithNana',
+  'تعلم الإنجليزية من الصفر':'https://www.youtube.com/@ZAmericanEnglish',
+  'طليق (Taleek)':'https://www.youtube.com/@Taleek',
+  'Sıfırdan İngilizce':'https://www.youtube.com/results?search_query=Haluk+Tatar+ingilizce',
+  'English with Lucy':'https://www.youtube.com/@EnglishwithLucy',
+  'BBC Learning English':'https://www.bbc.co.uk/learningenglish',
+  'تعلم التركية (A1-C1)':'https://yee.org.tr',
+  'قواعد اللغة التركية بالعربي':'https://www.youtube.com/results?search_query=قصة+تركيا+قواعد',
+  'محادثة إنجليزية يومية':'https://www.youtube.com/results?search_query=Learn+English+with+TV+Series',
+  'تحضير آيلتس (IELTS)':'https://www.ieltsliz.com',
+  'قواميس أكسفورد التفاعلية':'https://www.oxfordlearnersdictionaries.com',
+  'English for Business':'https://www.coursera.org',
+  'ممارسة اللغة مع أجانب':'https://www.tandem.net',
+  'دبلومة الجرافيك الشاملة':'https://www.youtube.com/results?search_query=Nour+Design',
+  'UI/UX Design':'https://www.coursera.org/professional-certificates/google-ux-design',
+  'Figma for UI Design':'https://www.figma.com',
+  'AI for Everyone':'https://www.coursera.org/learn/ai-for-everyone',
+  'ChatGPT Masterclass':'https://www.udemy.com',
+  'Deep Learning Specialization':'https://www.coursera.org/specializations/deep-learning',
+  'أساسيات التسويق الرقمي':'https://learndigital.withgoogle.com',
+  'Social Media Marketing':'https://academy.hubspot.com',
+  'Google Analytics 4':'https://skillshop.withgoogle.com'
+};
+
+const SOCIAL_LINKS = {
+  'أساسيات البرمجة و C++':{youtube:'https://www.youtube.com/@ProgrammingAdvice'},
+  'مسار الويب الشامل':{youtube:'https://www.youtube.com/@ElzeroWebSchool'},
+  'دبلومة الويب':{youtube:'https://www.youtube.com/@ElzeroWebSchool'},
+  'CS50 Harvard':{youtube:'https://www.youtube.com/user/cs50tv'},
+  'Web Geliştirme':{youtube:'https://www.youtube.com/@sadikturan'},
+  'Web Development':{youtube:'https://www.youtube.com/@sadikturan'},
+  'C# Masterclass':{youtube:'https://www.youtube.com/@MuratYucedag',linkedin:'https://www.linkedin.com/in/muratyucedag/'},
+  'Flutter & Dart':{youtube:'https://www.youtube.com/@SatrCodes'},
+  'الخوارزميات':{youtube:'https://www.youtube.com/@mostafasaad87'},
+  'Python Bootcamp':{instagram:'https://www.instagram.com/juuustangela/'},
+  'Java Training':{youtube:'https://www.youtube.com/@btkakademi'},
+  'FreeCodeCamp':{youtube:'https://www.youtube.com/c/Freecodecamp'},
+  'تطوير أندرويد':{youtube:'https://www.youtube.com/@MuhammedEissa',linkedin:'https://www.linkedin.com/in/muhammedeissa/'},
+  'Node.js Basics':{youtube:'https://www.youtube.com/user/programmingwithmosh'},
+  'PHP & Laravel':{youtube:'https://www.youtube.com/@UniqueCoderzAcademy',telegram:'https://t.me/UniqueCoderzAcademy'},
+  'iOS Development':{instagram:'https://www.instagram.com/appbrewery/'},
+  'Unity Game Dev':{youtube:'https://www.youtube.com/@Brackeys',instagram:'https://www.instagram.com/brackeys/'},
+  'DevOps Course':{youtube:'https://www.youtube.com/@TechWorldwithNana'},
+  'Cyber Security':{youtube:'https://www.youtube.com/@Yyasir',twitter:'https://twitter.com/Yyasir'},
+  'React JS':{youtube:'https://www.youtube.com/@traversymedia',linkedin:'https://www.linkedin.com/in/bradtraversy/'},
+  'SQL Masterclass':{youtube:'https://www.youtube.com/@kudvenkat',linkedin:'https://www.linkedin.com/in/kudvenkat/'},
+  'الإنجليزية للمبتدئين':{youtube:'https://www.youtube.com/@ZAmericanEnglish'},
+  'Sıfırdan İngilizce':{youtube:'https://www.youtube.com/@haluktatar',instagram:'https://www.instagram.com/haluktatar/'},
+  'English with Lucy':{youtube:'https://www.youtube.com/@EnglishwithLucy'},
+  'تعلم التركية':{youtube:'https://www.youtube.com/@StoryTurkey',instagram:'https://www.instagram.com/storyturkey/'},
+  'IELTS Tips':{youtube:'https://www.youtube.com/user/IELTSLiz'},
+  'BBC English':{youtube:'https://www.youtube.com/@bbclearningenglish'},
+  'YEE Türkçe':{youtube:'https://www.youtube.com/@yeeonline'},
+  'Taleek (تطبيق)':{youtube:'https://www.youtube.com/@Taleek'}
+};
+
 // ═══════════════════════════════════════
 // i18n
 // ═══════════════════════════════════════
@@ -482,14 +887,23 @@ const i18n = {
     'hero-title':'Discover the Best','hero-title2':'Educational Resources',
     'hero-desc':'Curated courses, websites, and tools for programming, English, and AI — in Arabic, Turkish, and English.',
     stat1:'Resources',stat2:'Languages',stat3:'Categories',stat4:'Add Your Own',
-    'filter-cat':'Category:','filter-type':'Type:',
+    'filter-cat':'Category:','filter-type':'Type:','filter-price':'Price:','filter-level':'Level:',
     'cat-all':'All','cat-prog':'Programming','cat-eng':'English','cat-ai':'AI Tools',
     'type-all':'All','type-video':'Video','type-website':'Website','type-software':'Software',
-    'resources-title':'Resources','hub-title':'Software Hub',
+    'price-all':'All','price-free':'Free','price-paid':'Paid',
+    'level-all':'All','level-beginner':'Beginner','level-intermediate':'Intermediate','level-advanced':'Advanced',
+    'resources-title':'Resources','hub-title':'Software Hub','roadmap-title':'Golden Roadmap','master-title':'Master Roadmaps','ideas-title':'50 UI/UX Upgrade Ideas',
+    'phase-learn-title':'1) Learning Phase','phase-learn-sub':'Courses and sources for each track (20+).','phase-learn-li1':'Core concepts and prerequisites.','phase-learn-li2':'Course rating, duration, and language.',
+    'phase-dev-title':'2) Development Phase','phase-dev-sub':'Tools, IDEs, and practical projects.','phase-dev-li1':'Setup VS Code, Git, Node/Python.','phase-dev-li2':'Build guided mini-projects.',
+    'phase-deploy-title':'3) Deployment Phase','phase-deploy-sub':'Publish projects with clear platform rules.','phase-deploy-li1':'GitHub Pages for static websites.','phase-deploy-li2':'Vercel/Netlify for React/Next.js.',
     'form-title':'Add a Resource','form-subtitle':'Share a course, website, or tool. Saved to your browser.',
     'form-name':'Resource Name *','form-url':'URL *','form-desc':'Description',
     'form-cat':'Category','form-type':'Type','form-lang':'Language','form-submit':'Add Resource',
-    'visit':'Visit','toast-added':'Resource added!','toast-error':'Please fill in name and URL.',
+    'visit':'Visit','details':'Timeline','toast-added':'Resource added!','toast-error':'Please fill in name and URL.',
+    'prerequisites':'Prerequisites','syllabus':'Syllabus','projects':'Projects','certificate':'Certificate','deployment':'Deployment','popularity':'Popularity','milestones':'Milestones',
+    'compare-a':'Select first course for compare','compare-b':'Select second course for compare','compare-run':'Compare','compare-clear':'Clear',
+    'verify-cert':'Verify certificate','open-course':'Open course','compare-btn':'Compare','save-btn':'Save','bookmark-prompt':'Folder name to save bookmark:','bookmark-saved':'Course saved in','bookmark-exists':'Course already bookmarked',
+    'need-two':'Choose two courses first','compare-ready':'Comparing',
     footer:'Built for learners everywhere',
     'no-results':'No resources match your filters.',
     'user-tag':'My Resource',
@@ -499,14 +913,23 @@ const i18n = {
     'hero-title':'اكتشف أفضل','hero-title2':'المصادر التعليمية',
     'hero-desc':'كورسات ومواقع وأدوات منتقاة في البرمجة والإنجليزية والذكاء الاصطناعي — بالعربية والتركية والإنجليزية.',
     stat1:'مصدر',stat2:'لغات',stat3:'أقسام',stat4:'أضف مصادرك',
-    'filter-cat':'القسم:','filter-type':'النوع:',
+    'filter-cat':'القسم:','filter-type':'النوع:','filter-price':'السعر:','filter-level':'المستوى:',
     'cat-all':'الكل','cat-prog':'برمجة','cat-eng':'إنجليزي','cat-ai':'أدوات AI',
     'type-all':'الكل','type-video':'فيديو','type-website':'موقع','type-software':'برنامج',
-    'resources-title':'المصادر','hub-title':'مركز التحميل',
+    'price-all':'الكل','price-free':'مجاني','price-paid':'مدفوع',
+    'level-all':'الكل','level-beginner':'مبتدئ','level-intermediate':'متوسط','level-advanced':'متقدم',
+    'resources-title':'المصادر','hub-title':'مركز التحميل','roadmap-title':'خارطة الطريق الذهبية','master-title':'الخرائط الرئيسية','ideas-title':'50 فكرة لتحسين الواجهة',
+    'phase-learn-title':'1) مرحلة التعلم','phase-learn-sub':'كورسات ومصادر لكل مسار (20+).','phase-learn-li1':'المفاهيم والمتطلبات الأساسية.','phase-learn-li2':'تقييم الكورس والمدة ولغة الشرح.',
+    'phase-dev-title':'2) مرحلة التطوير','phase-dev-sub':'الأدوات والبيئات والمشاريع العملية.','phase-dev-li1':'إعداد VS Code وGit وNode/Python.','phase-dev-li2':'بناء مشاريع تطبيقية موجهة.',
+    'phase-deploy-title':'3) مرحلة الرفع والنشر','phase-deploy-sub':'نشر المشاريع مع شروط كل منصة.','phase-deploy-li1':'GitHub Pages للمواقع الثابتة.','phase-deploy-li2':'Vercel/Netlify لمشاريع React/Next.',
     'form-title':'أضف مصدراً','form-subtitle':'شارك كورساً أو موقعاً أو أداة. يُحفظ في متصفحك.',
     'form-name':'اسم المصدر *','form-url':'الرابط *','form-desc':'وصف مختصر',
     'form-cat':'القسم','form-type':'النوع','form-lang':'اللغة','form-submit':'إضافة المصدر',
-    'visit':'زيارة','toast-added':'تمت الإضافة!','toast-error':'يرجى إدخال الاسم والرابط.',
+    'visit':'زيارة','details':'خارطة الكورس','toast-added':'تمت الإضافة!','toast-error':'يرجى إدخال الاسم والرابط.',
+    'prerequisites':'المتطلبات','syllabus':'المنهج','projects':'المشاريع','certificate':'الشهادة','deployment':'النشر','popularity':'الإقبال','milestones':'المحطات',
+    'compare-a':'اختر كورس للمقارنة','compare-b':'اختر كورس ثاني','compare-run':'قارن','compare-clear':'مسح',
+    'verify-cert':'تحقق الشهادة','open-course':'فتح الكورس','compare-btn':'قارن','save-btn':'حفظ','bookmark-prompt':'اسم مجلد الحفظ:','bookmark-saved':'تم حفظ الكورس في','bookmark-exists':'هذا الكورس محفوظ مسبقاً',
+    'need-two':'اختر كورسين أولاً','compare-ready':'مقارنة',
     footer:'للمتعلمين في كل مكان',
     'no-results':'لا توجد مصادر تطابق الفلاتر.',
     'user-tag':'مصدري',
@@ -516,14 +939,23 @@ const i18n = {
     'hero-title':'En İyi Kaynakları','hero-title2':'Keşfet',
     'hero-desc':'Programlama, İngilizce ve yapay zeka için seçilmiş kurslar, siteler ve araçlar — Arapça, Türkçe ve İngilizce.',
     stat1:'Kaynak',stat2:'Dil',stat3:'Kategori',stat4:'Ekle',
-    'filter-cat':'Kategori:','filter-type':'Tür:',
+    'filter-cat':'Kategori:','filter-type':'Tür:','filter-price':'Fiyat:','filter-level':'Seviye:',
     'cat-all':'Tümü','cat-prog':'Programlama','cat-eng':'İngilizce','cat-ai':'AI Araçları',
     'type-all':'Tümü','type-video':'Video','type-website':'Website','type-software':'Yazılım',
-    'resources-title':'Kaynaklar','hub-title':'Yazılım Merkezi',
+    'price-all':'Tümü','price-free':'Ücretsiz','price-paid':'Ücretli',
+    'level-all':'Tümü','level-beginner':'Başlangıç','level-intermediate':'Orta','level-advanced':'İleri',
+    'resources-title':'Kaynaklar','hub-title':'Yazılım Merkezi','roadmap-title':'Altın Yol Haritası','master-title':'Ana Yol Haritalari','ideas-title':'50 UI/UX Gelistirme Fikri',
+    'phase-learn-title':'1) Öğrenme Aşaması','phase-learn-sub':'Her yol için kurs ve kaynaklar (20+).','phase-learn-li1':'Temel kavramlar ve ön koşullar.','phase-learn-li2':'Kurs puanı, süre ve dil.',
+    'phase-dev-title':'2) Geliştirme Aşaması','phase-dev-sub':'Araçlar, IDE ve pratik projeler.','phase-dev-li1':'VS Code, Git, Node/Python kur.','phase-dev-li2':'Yönlendirmeli mini projeler yap.',
+    'phase-deploy-title':'3) Yayınlama Aşaması','phase-deploy-sub':'Platform şartlarıyla projeyi yayınla.','phase-deploy-li1':'Statik siteler için GitHub Pages.','phase-deploy-li2':'React/Next için Vercel/Netlify.',
     'form-title':'Kaynak Ekle','form-subtitle':'Bir kurs, site veya araç paylaş. Tarayıcında kaydedilir.',
     'form-name':'Kaynak Adı *','form-url':'URL *','form-desc':'Kısa açıklama',
     'form-cat':'Kategori','form-type':'Tür','form-lang':'Dil','form-submit':'Kaynak Ekle',
-    'visit':'Ziyaret','toast-added':'Kaynak eklendi!','toast-error':'Lütfen ad ve URL girin.',
+    'visit':'Ziyaret','details':'Zaman Çizelgesi','toast-added':'Kaynak eklendi!','toast-error':'Lütfen ad ve URL girin.',
+    'prerequisites':'On Kosullar','syllabus':'Mufredat','projects':'Projeler','certificate':'Sertifika','deployment':'Yayinlama','popularity':'Populerlik','milestones':'Kilometre Taslari',
+    'compare-a':'Ilk kursu sec','compare-b':'Ikinci kursu sec','compare-run':'Karsilastir','compare-clear':'Temizle',
+    'verify-cert':'Sertifikayi dogrula','open-course':'Kursu ac','compare-btn':'Karsilastir','save-btn':'Kaydet','bookmark-prompt':'Klasor adi:','bookmark-saved':'Kurs kaydedildi','bookmark-exists':'Bu kurs zaten kayitli',
+    'need-two':'Once iki kurs sec','compare-ready':'Karsilastirma',
     footer:'Her yerdeki öğrenciler için',
     'no-results':'Filtrelere uyan kaynak yok.',
     'user-tag':'Kaynağım',
@@ -533,6 +965,13 @@ const i18n = {
 let currentLang = localStorage.getItem('eduhub-lang') || 'en';
 let currentCat = 'all';
 let currentType = 'all';
+let currentPrice = 'all';
+let currentLevel = 'all';
+let searchQuery = '';
+let activeHubId = 'programming';
+let masterSearch = '';
+let timelineFontScale = 1;
+let compareCourses = [];
 let isDark = localStorage.getItem('eduhub-theme') !== 'light';
 
 function t(key){ return i18n[currentLang][key] || i18n.en[key] || key; }
@@ -549,6 +988,7 @@ function setLang(lang){
   applyTranslations();
   renderCards();
   renderHub();
+  renderMaster();
 }
 
 function applyTranslations(){
@@ -556,6 +996,14 @@ function applyTranslations(){
     const key = el.dataset.i18n;
     el.textContent = t(key);
   });
+  const search = document.getElementById('search-input');
+  if(search){
+    search.placeholder = currentLang === 'ar' ? 'ابحث عن كورس أو مصدر...' : currentLang === 'tr' ? 'Kurs veya kaynak ara...' : 'Search courses or resources...';
+  }
+  const master = document.getElementById('master-search');
+  if(master){
+    master.placeholder = currentLang === 'ar' ? 'بحث ذكي داخل المجمع الحالي...' : currentLang === 'tr' ? 'Aktif merkezde akilli ara...' : 'Smart search in active hub...';
+  }
 }
 
 function toggleTheme(){
@@ -578,6 +1026,20 @@ function setType(type){
   document.querySelectorAll('.type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === type));
   renderCards();
 }
+function setPrice(price){
+  currentPrice = price;
+  document.querySelectorAll('.price-btn').forEach(b => b.classList.toggle('active', b.dataset.price === price));
+  renderCards();
+}
+function setLevel(level){
+  currentLevel = level;
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.toggle('active', b.dataset.level === level));
+  renderCards();
+}
+function setSearch(query){
+  searchQuery = (query || '').toLowerCase().trim();
+  renderCards();
+}
 
 // ═══════════════════════════════════════
 // CARDS
@@ -589,6 +1051,15 @@ function getLangLabel(lang){
   const map = {ar:'عربي',tr:'Türkçe',en:'English',all:'Multi'};
   return map[lang] || lang;
 }
+function levelLabel(level){
+  const map = {beginner:t('level-beginner'),intermediate:t('level-intermediate'),advanced:t('level-advanced')};
+  return map[level] || '-';
+}
+function calcPopularity(r){
+  const info = COURSE_DETAILS[r.id] || {};
+  if(!info.enrollments || !info.visitors) return null;
+  return ((info.enrollments / info.visitors) * 100).toFixed(1);
+}
 
 function renderCards(){
   const userResources = JSON.parse(localStorage.getItem('eduhub-user') || '[]');
@@ -598,6 +1069,14 @@ function renderCards(){
   let filtered = all.filter(r => {
     if(currentCat !== 'all' && r.cat !== currentCat) return false;
     if(currentType !== 'all' && r.type !== currentType) return false;
+    const info = COURSE_DETAILS[r.id] || {};
+    if(currentPrice !== 'all' && (info.price || 'free') !== currentPrice) return false;
+    if(currentLevel !== 'all' && (info.level || 'beginner') !== currentLevel) return false;
+    if(searchQuery){
+      const title = (typeof r.title === 'object') ? (r.title[currentLang] || r.title.en || r.title.ar || '') : (r.title || '');
+      const desc = (typeof r.desc === 'object') ? (r.desc[currentLang] || r.desc.en || r.desc.ar || '') : (r.desc || '');
+      if(!`${title} ${desc}`.toLowerCase().includes(searchQuery)) return false;
+    }
     return true;
   });
 
@@ -615,7 +1094,9 @@ function renderCards(){
     const catCls = getCatClass(r.cat);
     const iconEl = `<div class="card-icon ${isUser ? 'user' : catCls}">${r.icon || '📌'}</div>`;
     const typeLabel = t(`type-${r.type}`);
+    const info = COURSE_DETAILS[r.id] || {};
     const delBtn = isUser ? `<button onclick="deleteResource('${r.id}',event)" style="padding:.3rem .6rem;border-radius:6px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.08);color:#FCA5A5;font-size:.7rem;cursor:pointer;" title="Delete">✕</button>` : '';
+    const pop = calcPopularity(r);
     return `
     <a href="${r.url}" target="_blank" rel="noopener" class="card" style="animation-delay:${i*0.04}s">
       <div class="card-top">
@@ -628,9 +1109,13 @@ function renderCards(){
       <div class="card-tags">
         <span class="tag tag-lang">${getLangLabel(r.lang)}</span>
         <span class="tag ${getTypeTagClass(r.type)}">${typeLabel}</span>
+        <span class="tag tag-lang">${(info.price || 'free') === 'paid' ? t('price-paid') : t('price-free')}</span>
+        <span class="tag tag-lang">${levelLabel(info.level || 'beginner')}</span>
+        ${pop ? `<span class="tag tag-lang">${t('popularity')}: ${pop}%</span>` : ''}
         ${isUser ? `<span class="tag tag-user">${t('user-tag')}</span>` : ''}
       </div>
       <div class="card-cta">
+        <button class="card-link-btn" onclick="openTimeline('${r.id}',event)">${t('details')}</button>
         <span class="card-link-btn">${t('visit')} →</span>
         ${delBtn}
       </div>
@@ -645,6 +1130,281 @@ function deleteResource(id, e){
   user = user.filter(r => r.id !== id);
   localStorage.setItem('eduhub-user', JSON.stringify(user));
   renderCards();
+}
+
+function openTimeline(id, e){
+  e.preventDefault();
+  e.stopPropagation();
+  const userResources = JSON.parse(localStorage.getItem('eduhub-user') || '[]');
+  const all = [...RESOURCES, ...userResources];
+  const item = all.find(r => r.id === id);
+  if(!item) return;
+  const info = COURSE_DETAILS[item.id] || {};
+  const title = (typeof item.title === 'object') ? (item.title[currentLang] || item.title.en || item.title.ar) : item.title;
+  const pre = info.prerequisites || ['Basic setup and focus'];
+  const syl = info.syllabus || ['Core lessons included'];
+  const pro = info.projects || ['Build one practical project'];
+  const dep = info.deployment || ['Publish on GitHub'];
+  const cert = info.certificate ? (currentLang === 'ar' ? 'نعم' : 'Yes') : (currentLang === 'ar' ? 'لا' : 'No');
+  const pop = (info.enrollments && info.visitors) ? `${((info.enrollments / info.visitors) * 100).toFixed(1)}%` : '-';
+  const milestones = currentLang === 'ar'
+    ? ['بدء الكورس','إنهاء 30%','إنهاء 60%','مشروع نهائي','نشر المشروع']
+    : currentLang === 'tr'
+      ? ['Kursa basla','Yuzde 30 tamamla','Yuzde 60 tamamla','Final proje','Projeyi yayinla']
+      : ['Start course','Complete 30%','Complete 60%','Final project','Deploy project'];
+  document.getElementById('timeline-title').textContent = `${title} · ${info.duration || '-'}`;
+  document.getElementById('timeline-content').innerHTML = `
+    <div class="timeline-item"><div class="ti-title">${t('prerequisites')}</div><div class="ti-text">${pre.join(' • ')}</div></div>
+    <div class="timeline-item"><div class="ti-title">${t('syllabus')}</div><div class="ti-text">${syl.join(' • ')}</div></div>
+    <div class="timeline-item"><div class="ti-title">${t('projects')}</div><div class="ti-text">${pro.join(' • ')}</div></div>
+    <div class="timeline-item"><div class="ti-title">${t('deployment')}</div><div class="ti-text">${dep.join(' • ')}</div></div>
+    <div class="timeline-item"><div class="ti-title">${t('milestones')}</div><div class="ti-text">${milestones.map(m => `✓ ${m}`).join(' • ')}</div></div>
+    <div class="timeline-item"><div class="ti-title">${t('popularity')}</div><div class="ti-text">${pop}</div></div>
+    <div class="timeline-item"><div class="ti-title">${t('certificate')}</div><div class="ti-text">${cert}</div></div>
+  `;
+  document.getElementById('timeline-modal').classList.add('open');
+}
+
+function closeTimeline(e){
+  if(e && e.target && e.target.id && e.target.id !== 'timeline-modal' && !e.target.classList.contains('close-btn')) return;
+  document.getElementById('timeline-modal').classList.remove('open');
+}
+
+// ═══════════════════════════════════════
+// MASTER TRACKS
+// ═══════════════════════════════════════
+function getActiveHub(){ return HUB_CATALOG.find(h => h.id === activeHubId) || HUB_CATALOG[0]; }
+
+function handleMasterSearch(v){
+  masterSearch = (v || '').trim().toLowerCase();
+  renderSuggestions(v || '');
+  renderMaster();
+}
+
+function setMasterHub(id){
+  activeHubId = id;
+  renderMaster();
+}
+
+function renderMasterTabs(){
+  const el = document.getElementById('master-tabs');
+  if(!el) return;
+  el.innerHTML = HUB_CATALOG.map(h => `<button class="master-tab ${h.id===activeHubId?'active':''}" onclick="setMasterHub('${h.id}')">${h.name}</button>`).join('');
+}
+
+function renderMaster(){
+  renderMasterTabs();
+  const hub = getActiveHub();
+  const journeyTitle = document.getElementById('journey-title');
+  const journeySteps = document.getElementById('journey-steps');
+  const list = document.getElementById('master-course-list');
+  const count = document.getElementById('master-count');
+  if(!journeyTitle || !journeySteps || !list || !count) return;
+
+  journeyTitle.textContent = `${t('roadmap-title')} - ${hub.name}`;
+  journeySteps.innerHTML = hub.phases.map((p,idx) => `<div class="journey-step">${idx+1}) ${p}</div>`).join('');
+
+  let courses = hub.courses.map(([name,instructor,lang,status,cert]) => ({name,instructor,lang,status,cert}));
+  if(masterSearch){
+    courses = courses.filter(c => `${c.name} ${c.instructor} ${c.lang} ${c.status}`.toLowerCase().includes(masterSearch));
+  }
+  count.textContent = `${courses.length} / ${hub.courses.length}`;
+
+  list.innerHTML = courses.map((c, idx) => `
+    <div class="course-item">
+      <h4>${c.name}</h4>
+      <div class="course-meta">
+        <span class="tag tag-lang ${languageBadgeClass(c.lang)}">${c.lang}</span>
+        <span>${c.instructor}</span><span>•</span><span>${c.status}</span>
+        <span class="tag tag-lang">${getPhaseLabel(idx, hub.phases)}</span>
+        <span class="tag tag-lang">${courseSuccessRate(c.name)}%</span>
+        <span class="${c.cert==='نعم'?'badge-cert':'badge-no'}">${t('certificate')}: ${c.cert}</span>
+        <a class="tiny-btn" target="_blank" rel="noopener" href="${normalizeUrl(getCoursePath(c))}">${t('open-course')}</a>
+        <a class="tiny-btn" target="_blank" rel="noopener" href="${normalizeUrl(getCertLink(c))}">${t('verify-cert')}</a>
+        <button class="tiny-btn" onclick='toggleCompare(${JSON.stringify(c).replace(/'/g,"&#39;")})'>${t('compare-btn')}</button>
+        <button class="tiny-btn" onclick='saveBookmark(${JSON.stringify(c).replace(/'/g,"&#39;")})'>${t('save-btn')}</button>
+      </div>
+      <div class="course-social">${renderSocialIcons(c.name)}</div>
+    </div>
+  `).join('');
+  if(hub.id === 'programming'){
+    list.innerHTML += `<div class="course-item"><h4>${t('deployment')}</h4><div class="course-meta">${t('phase-deploy-sub')}</div><div class="deploy-tools"><a class="tiny-btn" target="_blank" rel="noopener" href="https://desktop.github.com/">GitHub Desktop</a><a class="tiny-btn" target="_blank" rel="noopener" href="https://filezilla-project.org/">FileZilla</a><a class="tiny-btn" target="_blank" rel="noopener" href="https://vercel.com/">Vercel</a><a class="tiny-btn" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub Pages</a></div></div>`;
+  }
+  updateCompareUI();
+}
+
+function renderSuggestions(input){
+  const box = document.getElementById('master-suggestions');
+  if(!box) return;
+  const q = (input || '').trim().toLowerCase();
+  if(!q){ box.classList.remove('show'); box.innerHTML = ''; return; }
+  const hub = getActiveHub();
+  const options = hub.courses
+    .map(([name,instructor]) => `${name} - ${instructor}`)
+    .filter(v => v.toLowerCase().includes(q))
+    .slice(0,6);
+  if(!options.length){ box.classList.remove('show'); box.innerHTML = ''; return; }
+  box.innerHTML = options.map(o => `<div class="suggestion-item" onclick="pickSuggestion('${o.replace(/'/g,"\\'")}')">${o}</div>`).join('');
+  box.classList.add('show');
+}
+
+function pickSuggestion(value){
+  const keyword = value.split(' - ')[0];
+  document.getElementById('master-search').value = keyword;
+  masterSearch = keyword.toLowerCase();
+  document.getElementById('master-suggestions').classList.remove('show');
+  renderMaster();
+}
+
+function getCertLink(course){
+  const query = encodeURIComponent(`${course.name} ${course.instructor} certificate`);
+  return `https://www.google.com/search?q=${query}`;
+}
+function getCoursePath(course){
+  if(COURSE_URLS[course.name]) return COURSE_URLS[course.name];
+  const query = encodeURIComponent(`${course.name} ${course.instructor}`);
+  return `https://www.google.com/search?q=${query}`;
+}
+function normalizeUrl(url){
+  if(!url) return '';
+  if(/^https?:\/\//i.test(url)) return url;
+  return `https://${url.replace(/^\/+/, '')}`;
+}
+function languageBadgeClass(lang){
+  const v = (lang || '').toLowerCase();
+  if(v.includes('عربي') || v.includes('arab')) return 'badge-ar';
+  if(v.includes('تركي') || v.includes('turk')) return 'badge-tr';
+  return 'badge-en';
+}
+function courseSuccessRate(name){
+  let seed = 0;
+  for(let i=0;i<name.length;i++) seed += name.charCodeAt(i);
+  return 85 + (seed % 15);
+}
+function getPhaseLabel(index, phases){
+  if(index < 7) return phases[0];
+  if(index < 14) return phases[1];
+  return phases[2];
+}
+function renderSocialIcons(name){
+  const links = SOCIAL_LINKS[name] || {};
+  const icons = [
+    {key:'youtube',emoji:'▶',title:'YouTube'},
+    {key:'instagram',emoji:'◎',title:'Instagram'},
+    {key:'telegram',emoji:'✈',title:'Telegram'},
+    {key:'linkedin',emoji:'in',title:'LinkedIn'},
+    {key:'twitter',emoji:'𝕏',title:'X'}
+  ];
+  return icons.filter(i => links[i.key]).map(i => `<a class="social-icon" href="${normalizeUrl(links[i.key])}" target="_blank" rel="noopener" title="${i.title}">${i.emoji}</a>`).join('');
+}
+
+function zoomTimeline(dir){
+  timelineFontScale = Math.max(0.9, Math.min(1.35, timelineFontScale + (dir * 0.08)));
+  const el = document.getElementById('timeline-content');
+  if(el) el.style.fontSize = `${timelineFontScale}rem`;
+}
+
+function toggleCompare(course){
+  const exists = compareCourses.find(c => c.name === course.name && c.instructor === course.instructor);
+  if(exists){
+    compareCourses = compareCourses.filter(c => !(c.name === course.name && c.instructor === course.instructor));
+  } else {
+    if(compareCourses.length === 2) compareCourses.shift();
+    compareCourses.push(course);
+  }
+  updateCompareUI();
+}
+
+function updateCompareUI(){
+  const drawer = document.getElementById('compare-drawer');
+  const a = document.getElementById('compare-a');
+  const b = document.getElementById('compare-b');
+  if(!drawer || !a || !b) return;
+  drawer.classList.toggle('show', compareCourses.length > 0);
+  a.textContent = compareCourses[0] ? `${compareCourses[0].name} | ${compareCourses[0].lang} | ${compareCourses[0].status} | ${t('certificate')}: ${compareCourses[0].cert}` : t('compare-a');
+  b.textContent = compareCourses[1] ? `${compareCourses[1].name} | ${compareCourses[1].lang} | ${compareCourses[1].status} | ${t('certificate')}: ${compareCourses[1].cert}` : t('compare-b');
+}
+
+function runCompare(){
+  if(compareCourses.length < 2){ showToast(t('need-two'), true); return; }
+  showToast(`${t('compare-ready')}: ${compareCourses[0].name} VS ${compareCourses[1].name}`);
+}
+
+function clearCompare(){
+  compareCourses = [];
+  updateCompareUI();
+}
+
+function saveBookmark(course){
+  const targetFolder = prompt(t('bookmark-prompt'), 'General') || 'General';
+  const store = JSON.parse(localStorage.getItem('eduhub-bookmarks') || '{}');
+  if(!store[targetFolder]) store[targetFolder] = [];
+  const exists = store[targetFolder].some(c => c.name === course.name && c.instructor === course.instructor);
+  if(!exists){
+    store[targetFolder].push(course);
+    localStorage.setItem('eduhub-bookmarks', JSON.stringify(store));
+    showToast(`${t('bookmark-saved')} ${targetFolder}`);
+  } else {
+    showToast(t('bookmark-exists'));
+  }
+}
+
+function renderIdeas(){
+  const wrap = document.getElementById('ui-ideas-list');
+  if(!wrap) return;
+  wrap.innerHTML = UI_IMPROVEMENTS.map((idea, idx) => `<div class="idea-card"><b>${idx + 1}.</b> ${idea}</div>`).join('');
+}
+
+function isDone(pathId, idx){
+  const key = `eduhub-path-${pathId}`;
+  const done = JSON.parse(localStorage.getItem(key) || '[]');
+  return done.includes(idx);
+}
+function toggleStep(pathId, idx){
+  const key = `eduhub-path-${pathId}`;
+  const done = JSON.parse(localStorage.getItem(key) || '[]');
+  const exists = done.includes(idx);
+  const next = exists ? done.filter(i => i !== idx) : [...done, idx];
+  localStorage.setItem(key, JSON.stringify(next));
+  renderMasterPaths();
+}
+function renderMasterPaths(){
+  const wrap = document.getElementById('paths-grid');
+  if(!wrap) return;
+  wrap.innerHTML = MASTER_PATHS.map(p => `
+    <div class="path-card">
+      <div class="path-title">${p.title}</div>
+      <div class="v-timeline">
+        ${p.steps.map((s, idx) => {
+          const done = isDone(p.id, idx);
+          return `<div class="v-step ${done ? 'done' : ''}">
+            <div class="v-step-head">
+              <span>${s}</span>
+              <span class="v-check" onclick="toggleStep('${p.id}',${idx})">${done ? '✅' : '⬜'}</span>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function runSplashScreen(){
+  const splash = document.getElementById('splash-screen');
+  const logo = document.getElementById('splash-logo');
+  const message = document.getElementById('splash-message');
+  if(!splash || !logo || !message) return;
+  setTimeout(() => {
+    logo.style.transition = 'all .45s ease';
+    logo.style.transform = 'scale(.72)';
+    logo.style.opacity = '.08';
+    logo.style.filter = 'blur(3px)';
+    message.classList.add('show');
+  }, 1500);
+  setTimeout(() => {
+    splash.classList.add('is-hidden');
+    setTimeout(() => splash.remove(), 800);
+  }, 4000);
 }
 
 // ═══════════════════════════════════════
@@ -715,9 +1475,24 @@ function showToast(msg, isErr=false){
 // INIT
 // ═══════════════════════════════════════
 function init(){
+  runSplashScreen();
+  const skeletonTarget = document.getElementById('cards-container');
+  if(skeletonTarget){
+    skeletonTarget.innerHTML = `<div class="skeleton">${Array.from({length:6}).map(() => '<div class="sk"></div>').join('')}</div>`;
+  }
   if(!isDark) document.body.classList.add('light');
   if(!isDark) document.querySelector('.theme-btn').textContent = '🌙';
-  setLang(currentLang);
+  setTimeout(() => {
+    setLang(currentLang);
+    renderMaster();
+    renderIdeas();
+    renderMasterPaths();
+  }, 450);
+  document.addEventListener('click', (e) => {
+    const box = document.getElementById('master-suggestions');
+    const wrap = document.querySelector('.search-wrap');
+    if(box && wrap && !wrap.contains(e.target)) box.classList.remove('show');
+  });
 }
 
 init();
