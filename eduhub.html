@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduHub — Smart Educational Resources</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #7C3AED;
+  --primary-light: #A78BFA;
+  --accent: #06B6D4;
+  --accent-light: #67E8F9;
+  --gold: #F59E0B;
+  --gold-light: #FCD34D;
+  --bg: #0D0B1E;
+  --bg2: #13102B;
+  --bg3: #1A1635;
+  --glass: rgba(255,255,255,0.05);
+  --glass-hover: rgba(255,255,255,0.09);
+  --border: rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.18);
+  --text: #F0EEFF;
+  --text-muted: rgba(240,238,255,0.55);
+  --text-dim: rgba(240,238,255,0.35);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font: 'Outfit', 'Tajawal', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  line-height:1.6;
+}
+[data-lang="ar"] body,[data-lang="ar"] *{font-family:'Tajawal',var(--font)}
+/* Aurora Background */
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.aurora-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.25;animation:float 18s ease-in-out infinite}
+.aurora-blob:nth-child(1){width:600px;height:600px;background:radial-gradient(circle,#7C3AED,transparent 70%);top:-100px;left:-100px;animation-delay:0s}
+.aurora-blob:nth-child(2){width:500px;height:500px;background:radial-gradient(circle,#06B6D4,transparent 70%);top:20%;right:-100px;animation-delay:-6s}
+.aurora-blob:nth-child(3){width:400px;height:400px;background:radial-gradient(circle,#F59E0B,transparent 70%);bottom:10%;left:20%;animation-delay:-12s}
+.aurora-blob:nth-child(4){width:350px;height:350px;background:radial-gradient(circle,#EC4899,transparent 70%);bottom:-50px;right:15%;animation-delay:-4s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-40px) scale(1.05)}66%{transform:translate(-30px,30px) scale(.95)}}
+/* Layout */
+.page{position:relative;z-index:1}
+/* Navbar */
+nav{
+  position:sticky;top:0;z-index:100;
+  padding:0 clamp(1rem,4vw,3rem);
+  background:rgba(13,11,30,0.7);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;gap:1rem}
+.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;flex-shrink:0}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff}
+.logo-text{font-size:1.3rem;font-weight:700;background:linear-gradient(90deg,var(--primary-light),var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-actions{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.lang-btn{
+  padding:.35rem .7rem;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--text-muted);cursor:pointer;
+  font-size:.8rem;font-weight:500;transition:.2s;font-family:inherit;
+}
+.lang-btn:hover,.lang-btn.active{background:var(--glass-hover);color:var(--text);border-color:var(--border-hover)}
+.lang-btn.active{background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.5);color:var(--primary-light)}
+.theme-btn{
+  width:36px;height:36px;border-radius:50%;border:1px solid var(--border);
+  background:transparent;color:var(--text-muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:16px;transition:.2s;
+}
+.theme-btn:hover{background:var(--glass-hover);color:var(--text)}
+/* Light mode */
+body.light{--bg:#F8F7FF;--bg2:#EDE9FF;--bg3:#E4DFF7;--glass:rgba(255,255,255,0.7);--glass-hover:rgba(255,255,255,0.9);--border:rgba(0,0,0,0.08);--border-hover:rgba(0,0,0,0.15);--text:#1A0F3C;--text-muted:rgba(26,15,60,.55);--text-dim:rgba(26,15,60,.35)}
+body.light nav{background:rgba(248,247,255,0.8)}
+body.light .aurora-blob{opacity:.12}
+/* Hero */
+.hero{padding:clamp(3rem,8vw,6rem) clamp(1rem,4vw,3rem) 2rem;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.35rem 1rem;border-radius:100px;border:1px solid rgba(124,58,237,.3);background:rgba(124,58,237,.1);font-size:.8rem;color:var(--primary-light);margin-bottom:1.5rem}
+.hero h1{font-size:clamp(2.2rem,6vw,4rem);font-weight:800;line-height:1.15;margin-bottom:1rem}
+.hero h1 span{background:linear-gradient(90deg,var(--primary-light),var(--accent-light),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:clamp(1rem,2vw,1.2rem);color:var(--text-muted);max-width:600px;margin:0 auto 2.5rem}
+.hero-stats{display:flex;justify-content:center;gap:clamp(1rem,4vw,3rem);flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:1.8rem;font-weight:700;background:linear-gradient(90deg,var(--primary-light),var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:.8rem;color:var(--text-muted)}
+/* Filter */
+.filter-wrap{padding:1.5rem clamp(1rem,4vw,3rem);display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:center}
+.filter-group{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center}
+.filter-label{font-size:.75rem;color:var(--text-dim);align-self:center;margin-right:.25rem}
+.filter-btn{
+  padding:.45rem 1rem;border-radius:100px;border:1px solid var(--border);
+  background:transparent;color:var(--text-muted);cursor:pointer;
+  font-size:.85rem;font-weight:500;transition:.25s;font-family:inherit;
+  display:flex;align-items:center;gap:.4rem;
+}
+.filter-btn:hover{background:var(--glass-hover);color:var(--text);border-color:var(--border-hover)}
+.filter-btn.active{background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.5);color:var(--primary-light)}
+.cat-btn.active.cat-prog{background:rgba(6,182,212,.12);border-color:rgba(6,182,212,.5);color:var(--accent-light)}
+.cat-btn.active.cat-eng{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.5);color:var(--gold-light)}
+.cat-btn.active.cat-ai{background:rgba(236,72,153,.12);border-color:rgba(236,72,153,.5);color:#F9A8D4}
+/* Cards Grid */
+.section{padding:1rem clamp(1rem,4vw,3rem) 2rem}
+.section-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem}
+.section-title{font-size:1.1rem;font-weight:600;color:var(--text-muted)}
+.section-line{flex:1;height:1px;background:var(--border)}
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1.25rem;
+}
+/* Resource Card */
+.card{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.25rem;
+  cursor:pointer;
+  transition:.25s;
+  display:flex;flex-direction:column;gap:.8rem;
+  animation:fadeIn .4s ease both;
+  text-decoration:none;
+  color:inherit;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.04),transparent);pointer-events:none}
+.card:hover{background:var(--glass-hover);border-color:var(--border-hover);transform:translateY(-3px)}
+.card.hidden{display:none}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.card-top{display:flex;align-items:flex-start;gap:.75rem}
+.card-icon{
+  width:44px;height:44px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.25rem;
+}
+.card-icon.prog{background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.2)}
+.card-icon.eng{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.2)}
+.card-icon.ai{background:rgba(236,72,153,.15);border:1px solid rgba(236,72,153,.2)}
+.card-icon.user{background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.2)}
+.card-meta{flex:1;min-width:0}
+.card-title{font-size:.95rem;font-weight:600;line-height:1.3;margin-bottom:.2rem;word-break:break-word}
+.card-desc{font-size:.8rem;color:var(--text-muted);line-height:1.4}
+.card-tags{display:flex;flex-wrap:wrap;gap:.35rem}
+.tag{padding:.2rem .55rem;border-radius:6px;font-size:.7rem;font-weight:500}
+.tag-lang{background:rgba(255,255,255,.07);color:var(--text-muted);border:1px solid var(--border)}
+.tag-type-video{background:rgba(6,182,212,.1);color:var(--accent-light);border:1px solid rgba(6,182,212,.2)}
+.tag-type-website{background:rgba(124,58,237,.1);color:var(--primary-light);border:1px solid rgba(124,58,237,.2)}
+.tag-type-software{background:rgba(245,158,11,.1);color:var(--gold-light);border:1px solid rgba(245,158,11,.2)}
+.tag-user{background:rgba(124,58,237,.15);color:var(--primary-light);border:1px solid rgba(124,58,237,.3)}
+.card-cta{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:.7rem;border-top:1px solid var(--border);margin-top:auto;
+}
+.card-link-btn{
+  padding:.35rem .75rem;border-radius:8px;font-size:.75rem;font-weight:500;
+  text-decoration:none;color:var(--text-muted);border:1px solid var(--border);
+  background:transparent;transition:.2s;cursor:pointer;font-family:inherit;
+}
+.card-link-btn:hover{background:var(--glass-hover);color:var(--text);border-color:var(--border-hover)}
+.no-results{grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-dim);font-size:1rem}
+/* Software Hub */
+.hub{padding:2rem clamp(1rem,4vw,3rem)}
+.hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+.hub-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.25rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;
+  text-align:center;transition:.25s;
+}
+.hub-card:hover{background:var(--glass-hover);border-color:var(--border-hover);transform:translateY(-2px)}
+.hub-icon{font-size:2rem}
+.hub-name{font-size:.9rem;font-weight:600}
+.hub-desc{font-size:.75rem;color:var(--text-muted);line-height:1.4}
+.hub-btn{
+  margin-top:auto;padding:.4rem .85rem;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--primary-light);font-size:.78rem;font-weight:500;
+  cursor:pointer;transition:.2s;text-decoration:none;font-family:inherit;display:inline-block;
+}
+.hub-btn:hover{background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.4)}
+/* Add Resource */
+.contribute{padding:2rem clamp(1rem,4vw,3rem) 4rem}
+.form-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);
+  padding:clamp(1.5rem,4vw,2.5rem);max-width:600px;margin:0 auto;
+}
+.form-title{font-size:1.2rem;font-weight:700;margin-bottom:.4rem}
+.form-subtitle{font-size:.85rem;color:var(--text-muted);margin-bottom:1.5rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:500px){.form-row{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem}
+.form-group label{font-size:.8rem;font-weight:500;color:var(--text-muted)}
+.form-control{
+  padding:.65rem 1rem;border-radius:var(--radius-sm);
+  border:1px solid var(--border);background:rgba(255,255,255,.04);
+  color:var(--text);font-size:.9rem;font-family:inherit;transition:.2s;outline:none;
+}
+.form-control:focus{border-color:rgba(124,58,237,.5);background:rgba(124,58,237,.05)}
+.form-control option{background:#1A1635;color:var(--text)}
+.btn-submit{
+  width:100%;padding:.75rem;border-radius:var(--radius-sm);
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  border:none;color:#fff;font-size:.95rem;font-weight:600;
+  cursor:pointer;transition:.25s;font-family:inherit;
+}
+.btn-submit:hover{opacity:.9;transform:translateY(-1px)}
+.btn-submit:active{transform:scale(.98)}
+/* Toast */
+.toast{
+  position:fixed;bottom:2rem;right:2rem;z-index:200;
+  background:rgba(6,182,212,.15);backdrop-filter:blur(20px);
+  border:1px solid rgba(6,182,212,.3);border-radius:12px;
+  padding:.75rem 1.25rem;color:var(--accent-light);font-size:.9rem;
+  transform:translateY(100px);opacity:0;transition:.3s;pointer-events:none;
+}
+.toast.show{transform:translateY(0);opacity:1}
+/* Footer */
+footer{
+  padding:1.5rem clamp(1rem,4vw,3rem);
+  border-top:1px solid var(--border);text-align:center;
+  color:var(--text-dim);font-size:.8rem;
+}
+/* Responsive */
+@media(max-width:640px){
+  .hero h1{font-size:1.8rem}
+  .nav-inner{gap:.5rem}
+  .logo-text{font-size:1.1rem}
+}
+/* RTL support */
+[dir="rtl"] .nav-actions{flex-direction:row-reverse}
+[dir="rtl"] .card-top{flex-direction:row-reverse}
+[dir="rtl"] .hero-badge{flex-direction:row-reverse}
+[dir="rtl"] .toast{right:auto;left:2rem}
+</style>
+</head>
+<body>
+
+<!-- Aurora Background -->
+<div class="aurora" aria-hidden="true">
+  <div class="aurora-blob"></div>
+  <div class="aurora-blob"></div>
+  <div class="aurora-blob"></div>
+  <div class="aurora-blob"></div>
+</div>
+
+<div class="page">
+
+<!-- Navbar -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">E</div>
+      <span class="logo-text">EduHub</span>
+    </a>
+    <div class="nav-actions">
+      <button class="lang-btn active" onclick="setLang('en')" data-label-ar="الإنجليزية" data-label-tr="İngilizce" data-label-en="EN">EN</button>
+      <button class="lang-btn" onclick="setLang('ar')" data-label-ar="العربية" data-label-tr="Arapça" data-label-en="AR">AR</button>
+      <button class="lang-btn" onclick="setLang('tr')" data-label-ar="التركية" data-label-tr="Türkçe" data-label-en="TR">TR</button>
+      <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">☀</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">✦ <span data-i18n="badge">Smart Learning Hub</span></div>
+  <h1><span data-i18n="hero-title">Discover the Best</span><br><span data-i18n="hero-title2">Educational Resources</span></h1>
+  <p data-i18n="hero-desc">Curated courses, websites, and tools for programming, English, and AI — in Arabic, Turkish, and English.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">30+</div><div class="stat-label" data-i18n="stat1">Resources</div></div>
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label" data-i18n="stat2">Languages</div></div>
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label" data-i18n="stat3">Categories</div></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-label" data-i18n="stat4">Add Your Own</div></div>
+  </div>
+</section>
+
+<!-- Filters -->
+<div class="filter-wrap">
+  <div class="filter-group">
+    <span class="filter-label" data-i18n="filter-cat">Category:</span>
+    <button class="filter-btn cat-btn active" data-cat="all" onclick="setCat('all')">✦ <span data-i18n="cat-all">All</span></button>
+    <button class="filter-btn cat-btn cat-prog" data-cat="prog" onclick="setCat('prog')">⌨ <span data-i18n="cat-prog">Programming</span></button>
+    <button class="filter-btn cat-btn cat-eng" data-cat="eng" onclick="setCat('eng')">💬 <span data-i18n="cat-eng">English</span></button>
+    <button class="filter-btn cat-btn cat-ai" data-cat="ai" onclick="setCat('ai')">✦ <span data-i18n="cat-ai">AI Tools</span></button>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label" data-i18n="filter-type">Type:</span>
+    <button class="filter-btn type-btn active" data-type="all" onclick="setType('all')" data-i18n="type-all">All</button>
+    <button class="filter-btn type-btn" data-type="video" onclick="setType('video')" data-i18n="type-video">Video</button>
+    <button class="filter-btn type-btn" data-type="website" onclick="setType('website')" data-i18n="type-website">Website</button>
+    <button class="filter-btn type-btn" data-type="software" onclick="setType('software')" data-i18n="type-software">Software</button>
+  </div>
+</div>
+
+<!-- Cards -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-title" data-i18n="resources-title">Resources</span>
+    <div class="section-line"></div>
+    <span id="count-badge" style="font-size:.8rem;color:var(--text-dim)"></span>
+  </div>
+  <div class="cards-grid" id="cards-container"></div>
+</div>
+
+<!-- Software Hub -->
+<div class="hub" id="hub-section">
+  <div class="section-header">
+    <span class="section-title" data-i18n="hub-title">Software Hub</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="hub-grid" id="hub-grid"></div>
+</div>
+
+<!-- Add Resource -->
+<div class="contribute">
+  <div class="form-card">
+    <div class="form-title" data-i18n="form-title">Add a Resource</div>
+    <div class="form-subtitle" data-i18n="form-subtitle">Share a course, website, or tool with the community. Saved locally to your browser.</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label data-i18n="form-name">Resource Name *</label>
+        <input class="form-control" id="f-name" type="text" placeholder="e.g. CS50 Harvard">
+      </div>
+      <div class="form-group">
+        <label data-i18n="form-url">URL *</label>
+        <input class="form-control" id="f-url" type="url" placeholder="https://...">
+      </div>
+    </div>
+    <div class="form-group">
+      <label data-i18n="form-desc">Description</label>
+      <input class="form-control" id="f-desc" type="text" placeholder="Short description...">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label data-i18n="form-cat">Category</label>
+        <select class="form-control" id="f-cat">
+          <option value="prog" data-i18n="cat-prog">Programming</option>
+          <option value="eng" data-i18n="cat-eng">English</option>
+          <option value="ai" data-i18n="cat-ai">AI Tools</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label data-i18n="form-type">Type</label>
+        <select class="form-control" id="f-type">
+          <option value="video" data-i18n="type-video">Video</option>
+          <option value="website" data-i18n="type-website">Website</option>
+          <option value="software" data-i18n="type-software">Software</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label data-i18n="form-lang">Language</label>
+      <select class="form-control" id="f-lang">
+        <option value="ar">Arabic / العربية</option>
+        <option value="tr">Turkish / Türkçe</option>
+        <option value="en">English</option>
+        <option value="all">Multi-language</option>
+      </select>
+    </div>
+    <button class="btn-submit" onclick="addResource()"><span data-i18n="form-submit">Add Resource</span></button>
+  </div>
+</div>
+
+<footer>
+  <p>EduHub &copy; 2025 &nbsp;·&nbsp; <span data-i18n="footer">Built for learners everywhere</span></p>
+</footer>
+
+</div><!-- end .page -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const RESOURCES = [
+  // ── PROGRAMMING ─────────────────────────────────────
+  {id:'r1',cat:'prog',type:'video',lang:'ar',icon:'🎓',
+   title:{ar:'أبو هدهود - برمجة بالعربي',tr:'Abu Hodhod - Arapça Programlama',en:'Programming Advice - Abu Hodhod'},
+   desc:{ar:'أفضل قناة عربية لتعلم البرمجة من الصفر',tr:'Sıfırdan programlama öğrenmek için en iyi Arapça kanal',en:'Best Arabic YouTube channel for learning programming from scratch'},
+   url:'https://www.youtube.com/@ProgrammingAdvice'},
+  {id:'r2',cat:'prog',type:'video',lang:'ar',icon:'💻',
+   title:{ar:'Elzero Web School',tr:'Elzero Web School',en:'Elzero Web School'},
+   desc:{ar:'كورسات HTML/CSS/JS/PHP باللغة العربية مجاناً',tr:'Arapça HTML/CSS/JS/PHP kursları ücretsiz',en:'Free Arabic HTML/CSS/JS/PHP courses'},
+   url:'https://elzero.org'},
+  {id:'r3',cat:'prog',type:'website',lang:'tr',icon:'🇹🇷',
+   title:{ar:'BTK Akademi',tr:'BTK Akademi',en:'BTK Akademi'},
+   desc:{ar:'أكاديمية تركية رسمية للتعليم التقني مجاناً',tr:'Ücretsiz Türkçe teknik eğitim platformu',en:'Official Turkish free technical education platform'},
+   url:'https://www.btkakademi.gov.tr'},
+  {id:'r4',cat:'prog',type:'video',lang:'tr',icon:'📹',
+   title:{ar:'Sadık Turan - تركي',tr:'Sadık Turan',en:'Sadık Turan'},
+   desc:{ar:'مطور ومدرس تركي شهير بشروحاته الواضحة',tr:'Anlaşılır anlatımıyla tanınan Türk yazılımcı ve eğitmen',en:'Popular Turkish developer and educator with clear tutorials'},
+   url:'https://www.youtube.com/@SadikTuran'},
+  {id:'r5',cat:'prog',type:'website',lang:'en',icon:'🆓',
+   title:{ar:'FreeCodeCamp',tr:'FreeCodeCamp',en:'FreeCodeCamp'},
+   desc:{ar:'منصة مجانية لتعلم تطوير الويب باللغة الإنجليزية',tr:'Web geliştirmeyi ücretsiz öğrenmek için İngilizce platform',en:'Free platform for learning web development with certifications'},
+   url:'https://www.freecodecamp.org'},
+  {id:'r6',cat:'prog',type:'video',lang:'en',icon:'🎓',
+   title:{ar:'CS50 - هارفارد',tr:'CS50 - Harvard',en:'CS50 - Harvard'},
+   desc:{ar:'أشهر كورس في علوم الحاسوب من جامعة هارفارد',tr:'Harvard Üniversitesi\'nden en ünlü bilgisayar bilimi kursu',en:'Harvard\'s legendary introduction to computer science'},
+   url:'https://cs50.harvard.edu'},
+  {id:'r7',cat:'prog',type:'website',lang:'en',icon:'📚',
+   title:{ar:'MDN Web Docs',tr:'MDN Web Docs',en:'MDN Web Docs'},
+   desc:{ar:'المرجع الرسمي الأشمل لتقنيات الويب',tr:'Web teknolojileri için kapsamlı resmi başvuru kaynağı',en:'Comprehensive official reference for web technologies'},
+   url:'https://developer.mozilla.org'},
+  {id:'r8',cat:'prog',type:'website',lang:'all',icon:'⚡',
+   title:{ar:'The Odin Project',tr:'The Odin Project',en:'The Odin Project'},
+   desc:{ar:'مسار تعليمي مجاني وشامل لتطوير الويب الكامل',tr:'Full-stack web geliştirme için ücretsiz kapsamlı öğrenme yolu',en:'Free full-stack web development learning path'},
+   url:'https://www.theodinproject.com'},
+
+  // ── ENGLISH ──────────────────────────────────────────
+  {id:'r9',cat:'eng',type:'video',lang:'ar',icon:'🎙',
+   title:{ar:'ZAmericanEnglish',tr:'ZAmericanEnglish',en:'ZAmericanEnglish'},
+   desc:{ar:'قناة تعليمية متميزة للإنجليزية الأمريكية',tr:'Amerikan İngilizcesi için üst düzey eğitim kanalı',en:'Excellent channel for learning American English'},
+   url:'https://www.youtube.com/@ZAmericanEnglish'},
+  {id:'r10',cat:'eng',type:'video',lang:'ar',icon:'🎧',
+   title:{ar:'English with Ramy',tr:'English with Ramy',en:'English with Ramy'},
+   desc:{ar:'تعلم الإنجليزية بطريقة ممتعة مع رامي',tr:'Eğlenceli yöntemle İngilizce öğren',en:'Learn English in a fun and engaging way'},
+   url:'https://www.youtube.com/@EnglishwithRamy'},
+  {id:'r11',cat:'eng',type:'website',lang:'en',icon:'📖',
+   title:{ar:'Oxford Learner\'s Dictionary',tr:'Oxford Öğrenci Sözlüğü',en:'Oxford Learner\'s Dictionary'},
+   desc:{ar:'قاموس أوكسفورد التعليمي الشامل مع أمثلة',tr:'Örneklerle kapsamlı Oxford öğrenci sözlüğü',en:'Comprehensive Oxford dictionary with examples and audio'},
+   url:'https://www.oxfordlearnersdictionaries.com'},
+  {id:'r12',cat:'eng',type:'video',lang:'en',icon:'📺',
+   title:{ar:'BBC Learning English',tr:'BBC Learning English',en:'BBC Learning English'},
+   desc:{ar:'تعلم الإنجليزية مع مؤسسة BBC العريقة',tr:'Köklü BBC ile İngilizce öğren',en:'Learn English with the BBC — trusted by millions'},
+   url:'https://www.bbc.co.uk/learningenglish'},
+  {id:'r13',cat:'eng',type:'software',lang:'all',icon:'🃏',
+   title:{ar:'Anki - بطاقات الحفظ',tr:'Anki - Hafıza Kartları',en:'Anki Flashcards'},
+   desc:{ar:'أداة بطاقات الذاكرة الأقوى لحفظ المفردات',tr:'Kelime ezberlemek için en güçlü hafıza kartı aracı',en:'The most powerful flashcard tool for vocabulary memorization'},
+   url:'https://apps.ankiweb.net'},
+  {id:'r14',cat:'eng',type:'website',lang:'tr',icon:'🇬🇧',
+   title:{ar:'Duolingo',tr:'Duolingo',en:'Duolingo'},
+   desc:{ar:'تطبيق تعلم اللغات الأكثر شعبية عالمياً',tr:'Dünyada en popüler dil öğrenme uygulaması',en:'World\'s most popular language learning app'},
+   url:'https://www.duolingo.com'},
+
+  // ── AI TOOLS ─────────────────────────────────────────
+  {id:'r15',cat:'ai',type:'website',lang:'all',icon:'🤖',
+   title:{ar:'ChatGPT',tr:'ChatGPT',en:'ChatGPT'},
+   desc:{ar:'مساعد الذكاء الاصطناعي الأكثر شهرة من OpenAI',tr:'OpenAI\'den en popüler yapay zeka asistanı',en:'OpenAI\'s flagship AI assistant for text, code, and analysis'},
+   url:'https://chat.openai.com'},
+  {id:'r16',cat:'ai',type:'website',lang:'all',icon:'✦',
+   title:{ar:'Claude - Anthropic',tr:'Claude - Anthropic',en:'Claude by Anthropic'},
+   desc:{ar:'مساعد ذكاء اصطناعي متقدم من Anthropic للتحليل والكتابة',tr:'Analiz ve yazmak için Anthropic\'ten gelişmiş yapay zeka',en:'Advanced AI assistant for writing, coding, and research'},
+   url:'https://claude.ai'},
+  {id:'r17',cat:'ai',type:'website',lang:'all',icon:'🎨',
+   title:{ar:'Midjourney',tr:'Midjourney',en:'Midjourney'},
+   desc:{ar:'أقوى أداة لتوليد الصور بالذكاء الاصطناعي',tr:'Yapay zeka ile görsel oluşturmak için en güçlü araç',en:'Leading AI image generation tool with stunning results'},
+   url:'https://www.midjourney.com'},
+  {id:'r18',cat:'ai',type:'website',lang:'all',icon:'📊',
+   title:{ar:'Gamma App - عروض تقديمية',tr:'Gamma App - Sunumlar',en:'Gamma App'},
+   desc:{ar:'أنشئ عروض تقديمية احترافية بالذكاء الاصطناعي في ثوانٍ',tr:'Yapay zeka ile saniyeler içinde profesyonel sunum oluştur',en:'Create professional presentations with AI in seconds'},
+   url:'https://gamma.app'},
+  {id:'r19',cat:'ai',type:'website',lang:'all',icon:'🔍',
+   title:{ar:'Perplexity AI',tr:'Perplexity AI',en:'Perplexity AI'},
+   desc:{ar:'محرك بحث ذكي يجمع البحث ومصادره',tr:'Kaynaklarla birlikte akıllı arama motoru',en:'AI-powered search engine with cited sources'},
+   url:'https://www.perplexity.ai'},
+  {id:'r20',cat:'ai',type:'website',lang:'all',icon:'🖼',
+   title:{ar:'DALL-E 3',tr:'DALL-E 3',en:'DALL-E 3'},
+   desc:{ar:'مولّد صور OpenAI المدمج مع ChatGPT',tr:'ChatGPT\'ye entegre OpenAI görsel üreticisi',en:'OpenAI\'s image generator built into ChatGPT'},
+   url:'https://openai.com/dall-e-3'},
+];
+
+const SOFTWARE = [
+  {icon:'💙',name:'VS Code',desc:{ar:'محرر الكود الأقوى',tr:'En güçlü kod editörü',en:'Most powerful code editor'},url:'https://code.visualstudio.com'},
+  {icon:'🐙',name:'Git',desc:{ar:'نظام التحكم بالإصدارات',tr:'Sürüm kontrol sistemi',en:'Essential version control system'},url:'https://git-scm.com'},
+  {icon:'🟩',name:'Node.js',desc:{ar:'بيئة تشغيل JavaScript',tr:'JavaScript çalışma ortamı',en:'JavaScript runtime for server-side'},url:'https://nodejs.org'},
+  {icon:'🐍',name:'Python',desc:{ar:'لغة البرمجة الأكثر شعبية',tr:'En popüler programlama dili',en:'World\'s most popular programming language'},url:'https://www.python.org'},
+  {icon:'🃏',name:'Anki',desc:{ar:'تطبيق البطاقات الذكية',tr:'Akıllı hafıza kartı uygulaması',en:'Spaced repetition flashcard app'},url:'https://apps.ankiweb.net'},
+  {icon:'🧠',name:'Obsidian',desc:{ar:'أداة قوية لتنظيم الملاحظات',tr:'Güçlü not yönetim aracı',en:'Powerful knowledge management app'},url:'https://obsidian.md'},
+];
+
+// ═══════════════════════════════════════
+// i18n
+// ═══════════════════════════════════════
+const i18n = {
+  en:{
+    badge:'Smart Learning Hub',
+    'hero-title':'Discover the Best','hero-title2':'Educational Resources',
+    'hero-desc':'Curated courses, websites, and tools for programming, English, and AI — in Arabic, Turkish, and English.',
+    stat1:'Resources',stat2:'Languages',stat3:'Categories',stat4:'Add Your Own',
+    'filter-cat':'Category:','filter-type':'Type:',
+    'cat-all':'All','cat-prog':'Programming','cat-eng':'English','cat-ai':'AI Tools',
+    'type-all':'All','type-video':'Video','type-website':'Website','type-software':'Software',
+    'resources-title':'Resources','hub-title':'Software Hub',
+    'form-title':'Add a Resource','form-subtitle':'Share a course, website, or tool. Saved to your browser.',
+    'form-name':'Resource Name *','form-url':'URL *','form-desc':'Description',
+    'form-cat':'Category','form-type':'Type','form-lang':'Language','form-submit':'Add Resource',
+    'visit':'Visit','toast-added':'Resource added!','toast-error':'Please fill in name and URL.',
+    footer:'Built for learners everywhere',
+    'no-results':'No resources match your filters.',
+    'user-tag':'My Resource',
+  },
+  ar:{
+    badge:'مركز التعلم الذكي',
+    'hero-title':'اكتشف أفضل','hero-title2':'المصادر التعليمية',
+    'hero-desc':'كورسات ومواقع وأدوات منتقاة في البرمجة والإنجليزية والذكاء الاصطناعي — بالعربية والتركية والإنجليزية.',
+    stat1:'مصدر',stat2:'لغات',stat3:'أقسام',stat4:'أضف مصادرك',
+    'filter-cat':'القسم:','filter-type':'النوع:',
+    'cat-all':'الكل','cat-prog':'برمجة','cat-eng':'إنجليزي','cat-ai':'أدوات AI',
+    'type-all':'الكل','type-video':'فيديو','type-website':'موقع','type-software':'برنامج',
+    'resources-title':'المصادر','hub-title':'مركز التحميل',
+    'form-title':'أضف مصدراً','form-subtitle':'شارك كورساً أو موقعاً أو أداة. يُحفظ في متصفحك.',
+    'form-name':'اسم المصدر *','form-url':'الرابط *','form-desc':'وصف مختصر',
+    'form-cat':'القسم','form-type':'النوع','form-lang':'اللغة','form-submit':'إضافة المصدر',
+    'visit':'زيارة','toast-added':'تمت الإضافة!','toast-error':'يرجى إدخال الاسم والرابط.',
+    footer:'للمتعلمين في كل مكان',
+    'no-results':'لا توجد مصادر تطابق الفلاتر.',
+    'user-tag':'مصدري',
+  },
+  tr:{
+    badge:'Akıllı Öğrenme Merkezi',
+    'hero-title':'En İyi Kaynakları','hero-title2':'Keşfet',
+    'hero-desc':'Programlama, İngilizce ve yapay zeka için seçilmiş kurslar, siteler ve araçlar — Arapça, Türkçe ve İngilizce.',
+    stat1:'Kaynak',stat2:'Dil',stat3:'Kategori',stat4:'Ekle',
+    'filter-cat':'Kategori:','filter-type':'Tür:',
+    'cat-all':'Tümü','cat-prog':'Programlama','cat-eng':'İngilizce','cat-ai':'AI Araçları',
+    'type-all':'Tümü','type-video':'Video','type-website':'Website','type-software':'Yazılım',
+    'resources-title':'Kaynaklar','hub-title':'Yazılım Merkezi',
+    'form-title':'Kaynak Ekle','form-subtitle':'Bir kurs, site veya araç paylaş. Tarayıcında kaydedilir.',
+    'form-name':'Kaynak Adı *','form-url':'URL *','form-desc':'Kısa açıklama',
+    'form-cat':'Kategori','form-type':'Tür','form-lang':'Dil','form-submit':'Kaynak Ekle',
+    'visit':'Ziyaret','toast-added':'Kaynak eklendi!','toast-error':'Lütfen ad ve URL girin.',
+    footer:'Her yerdeki öğrenciler için',
+    'no-results':'Filtrelere uyan kaynak yok.',
+    'user-tag':'Kaynağım',
+  }
+};
+
+let currentLang = localStorage.getItem('eduhub-lang') || 'en';
+let currentCat = 'all';
+let currentType = 'all';
+let isDark = localStorage.getItem('eduhub-theme') !== 'light';
+
+function t(key){ return i18n[currentLang][key] || i18n.en[key] || key; }
+
+function setLang(lang){
+  currentLang = lang;
+  localStorage.setItem('eduhub-lang', lang);
+  document.documentElement.setAttribute('data-lang', lang);
+  document.documentElement.setAttribute('lang', lang);
+  document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.onclick.toString().includes(`'${lang}'`));
+  });
+  applyTranslations();
+  renderCards();
+  renderHub();
+}
+
+function applyTranslations(){
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    el.textContent = t(key);
+  });
+}
+
+function toggleTheme(){
+  isDark = !isDark;
+  document.body.classList.toggle('light', !isDark);
+  document.querySelector('.theme-btn').textContent = isDark ? '☀' : '🌙';
+  localStorage.setItem('eduhub-theme', isDark ? 'dark' : 'light');
+}
+
+// ═══════════════════════════════════════
+// FILTERS
+// ═══════════════════════════════════════
+function setCat(cat){
+  currentCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  renderCards();
+}
+function setType(type){
+  currentType = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === type));
+  renderCards();
+}
+
+// ═══════════════════════════════════════
+// CARDS
+// ═══════════════════════════════════════
+function getTypeTagClass(type){ return `tag-type-${type}`; }
+function getCatClass(cat){ return cat === 'prog' ? 'prog' : cat === 'eng' ? 'eng' : 'ai'; }
+
+function getLangLabel(lang){
+  const map = {ar:'عربي',tr:'Türkçe',en:'English',all:'Multi'};
+  return map[lang] || lang;
+}
+
+function renderCards(){
+  const userResources = JSON.parse(localStorage.getItem('eduhub-user') || '[]');
+  const all = [...RESOURCES, ...userResources];
+  const container = document.getElementById('cards-container');
+  
+  let filtered = all.filter(r => {
+    if(currentCat !== 'all' && r.cat !== currentCat) return false;
+    if(currentType !== 'all' && r.type !== currentType) return false;
+    return true;
+  });
+
+  document.getElementById('count-badge').textContent = `${filtered.length}`;
+
+  if(filtered.length === 0){
+    container.innerHTML = `<div class="no-results">${t('no-results')}</div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map((r,i) => {
+    const isUser = r.isUser;
+    const title = (typeof r.title === 'object') ? (r.title[currentLang] || r.title.en || r.title.ar) : r.title;
+    const desc = (typeof r.desc === 'object') ? (r.desc[currentLang] || r.desc.en || r.desc.ar) : (r.desc || '');
+    const catCls = getCatClass(r.cat);
+    const iconEl = `<div class="card-icon ${isUser ? 'user' : catCls}">${r.icon || '📌'}</div>`;
+    const typeLabel = t(`type-${r.type}`);
+    const delBtn = isUser ? `<button onclick="deleteResource('${r.id}',event)" style="padding:.3rem .6rem;border-radius:6px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.08);color:#FCA5A5;font-size:.7rem;cursor:pointer;" title="Delete">✕</button>` : '';
+    return `
+    <a href="${r.url}" target="_blank" rel="noopener" class="card" style="animation-delay:${i*0.04}s">
+      <div class="card-top">
+        ${iconEl}
+        <div class="card-meta">
+          <div class="card-title">${title}</div>
+          <div class="card-desc">${desc}</div>
+        </div>
+      </div>
+      <div class="card-tags">
+        <span class="tag tag-lang">${getLangLabel(r.lang)}</span>
+        <span class="tag ${getTypeTagClass(r.type)}">${typeLabel}</span>
+        ${isUser ? `<span class="tag tag-user">${t('user-tag')}</span>` : ''}
+      </div>
+      <div class="card-cta">
+        <span class="card-link-btn">${t('visit')} →</span>
+        ${delBtn}
+      </div>
+    </a>`;
+  }).join('');
+}
+
+function deleteResource(id, e){
+  e.preventDefault();
+  e.stopPropagation();
+  let user = JSON.parse(localStorage.getItem('eduhub-user') || '[]');
+  user = user.filter(r => r.id !== id);
+  localStorage.setItem('eduhub-user', JSON.stringify(user));
+  renderCards();
+}
+
+// ═══════════════════════════════════════
+// ADD RESOURCE
+// ═══════════════════════════════════════
+function addResource(){
+  const name = document.getElementById('f-name').value.trim();
+  const url = document.getElementById('f-url').value.trim();
+  const desc = document.getElementById('f-desc').value.trim();
+  const cat = document.getElementById('f-cat').value;
+  const type = document.getElementById('f-type').value;
+  const lang = document.getElementById('f-lang').value;
+
+  if(!name || !url){ showToast(t('toast-error'), true); return; }
+
+  const newResource = {
+    id: 'u-' + Date.now(),
+    cat, type, lang,
+    icon: cat === 'prog' ? '💡' : cat === 'eng' ? '💬' : '✦',
+    title: name,
+    desc: desc || url,
+    url,
+    isUser: true,
+  };
+
+  const user = JSON.parse(localStorage.getItem('eduhub-user') || '[]');
+  user.push(newResource);
+  localStorage.setItem('eduhub-user', JSON.stringify(user));
+
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-url').value = '';
+  document.getElementById('f-desc').value = '';
+
+  showToast(t('toast-added'));
+  renderCards();
+}
+
+// ═══════════════════════════════════════
+// HUB
+// ═══════════════════════════════════════
+function renderHub(){
+  document.getElementById('hub-grid').innerHTML = SOFTWARE.map(s => {
+    const d = (typeof s.desc === 'object') ? (s.desc[currentLang] || s.desc.en) : s.desc;
+    return `
+    <div class="hub-card">
+      <div class="hub-icon">${s.icon}</div>
+      <div class="hub-name">${s.name}</div>
+      <div class="hub-desc">${d}</div>
+      <a href="${s.url}" target="_blank" rel="noopener" class="hub-btn">${t('visit')}</a>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+function showToast(msg, isErr=false){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = isErr ? 'rgba(239,68,68,.15)' : 'rgba(6,182,212,.15)';
+  t.style.borderColor = isErr ? 'rgba(239,68,68,.3)' : 'rgba(6,182,212,.3)';
+  t.style.color = isErr ? '#FCA5A5' : '#67E8F9';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+function init(){
+  if(!isDark) document.body.classList.add('light');
+  if(!isDark) document.querySelector('.theme-btn').textContent = '🌙';
+  setLang(currentLang);
+}
+
+init();
+</script>
+</body>
+</html>
